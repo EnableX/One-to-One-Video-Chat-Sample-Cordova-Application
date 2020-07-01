@@ -1,0 +1,48 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {
+      "config.xml": {
+        "parents": {
+          "/*": [
+            {
+              "xml": "<feature name=\"EnxCordovaPlugin\"><param name=\"ios-package\" onload=\"true\" value=\"EnxCordovaPlugin\" /></feature>",
+              "count": 1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "installed_plugins": {
+    "cordova-plugin-enable-multidex": {
+      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
+    },
+    "enablex-cordova-plugin": {
+      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
+    }
+  },
+  "dependent_plugins": {},
+  "modules": [
+    {
+      "id": "enablex-cordova-plugin.enxcordovaplugin",
+      "file": "plugins/enablex-cordova-plugin/www/enxcordovaplugin.js",
+      "pluginId": "enablex-cordova-plugin",
+      "clobbers": [
+        "EnxCordovaPlugin"
+      ],
+      "runs": true
+    }
+  ],
+  "plugin_metadata": {
+    "cordova-plugin-enable-multidex": "0.2.0",
+    "cordova-plugin-whitelist": "1.3.4",
+    "enablex-cordova-plugin": "1.0.5"
+  }
+}

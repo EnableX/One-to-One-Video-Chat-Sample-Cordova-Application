@@ -1,0 +1,77 @@
+{
+  "_from": "cordova-plugin-enable-multidex",
+  "_id": "cordova-plugin-enable-multidex@0.2.0",
+  "_inBundle": false,
+  "_integrity": "sha512-W/s8FpRdi3kTLtePdvauqKj1qqoxZDJWmEphvAmSmPwNTtfv3CxgnwFYc9aNmR9iDiJk3E0ME+9BRkbyz/4rXw==",
+  "_location": "/cordova-plugin-enable-multidex",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-plugin-enable-multidex",
+    "name": "cordova-plugin-enable-multidex",
+    "escapedName": "cordova-plugin-enable-multidex",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-enable-multidex/-/cordova-plugin-enable-multidex-0.2.0.tgz",
+  "_shasum": "74f4a43598d5298927d1e941acddeffaef281995",
+  "_spec": "cordova-plugin-enable-multidex",
+  "_where": "D:\\Cordova_BitBucketPlugin\\cordova-sample-app\\Sample",
+  "author": {
+    "name": "Adriano Di Giovanni",
+    "email": "me@adrianodigiovanni.com",
+    "url": "http://adrianodigiovanni.com/"
+  },
+  "bugs": {
+    "url": "https://github.com/adriano-di-giovanni/cordova-plugin-enable-multidex/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "Enable multidex for Cordova Android apps with over 64K methods",
+  "devDependencies": {
+    "eslint": "^4.17.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "husky": "^0.14.3",
+    "jest": "^22.1.4",
+    "lint-staged": "^6.1.0",
+    "prettier": "^1.10.2"
+  },
+  "homepage": "https://github.com/adriano-di-giovanni/cordova-plugin-enable-multidex#readme",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "multidex"
+  ],
+  "license": "MIT",
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.json": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "name": "cordova-plugin-enable-multidex",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adriano-di-giovanni/cordova-plugin-enable-multidex.git"
+  },
+  "scripts": {
+    "precommit": "lint-staged"
+  },
+  "version": "0.2.0"
+}

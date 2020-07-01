@@ -1,0 +1,21 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-enable-multidex": {
+      "PACKAGE_NAME": "com.example.Sample"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.example.Sample"
+    },
+    "enablex-cordova-plugin": {
+      "PACKAGE_NAME": "com.example.Sample"
+    }
+  },
+  "dependent_plugins": {}
+}

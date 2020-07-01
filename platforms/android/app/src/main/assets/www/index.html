@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!--meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *"-->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport"
+        content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <script type="text/javascript" src="js/jquery-1.12.3.js"></script>
+    <script type="text/javascript" src="js/jquery.mobile-1.4.5.js"></script>
+    <script type="text/javascript" src="js/responsiveImg.js"></script>
+    <title>NasaApp</title>
+</head>
+
+<body>
+    <div id="joiningDiv" class="joiningDiv">
+        <img src="img/logofront.png" height=40px; id="img_mikea" style="margin-top:20px;" />
+        <input height=150px; id="name" type="text" value="" placeholder="name" style="margin-top:30px;"/> <br />
+        <input id="roomid" type="text" value="5ea92a49b08e824f476c6610" placeholder="roomId" style="margin-top:10px;" /> <br />
+        <div style="margin-top:20px;">
+        <button id="createRoom" style="margin:5px;">Create Room</button>
+        <button id="joinButton" style="margin:5px;">Join Room</button>
+        </div>
+    </div>
+
+    <div id="conferenceDiv">
+        <button id="hideLocalView">hide Local</button>
+            <button id="muteAudio">Mute Audio</button>
+            <button id="resizeRemoteView">Resize Remote</button>
+            <button id="Speaker">Speaker</button>
+            <button id="Earpics">Earpics</button>
+            <button id="DragView">DragView</button>
+            <button id="muteVideo">Mute Video</button>
+            <button id="UnhideLocalView">Unhide Local</button>
+            <button id="Current">Current</button>
+            <button id="allDevice">allDevice</button>
+            <button id="unmuteAudio">Unmute Audio</button>
+            <button id="unmuteVideo">Unmute Video</button>
+            <button id="resizeLocalView">Resize Local</button>
+            <button id="hideRemoteView">hide Remote</button>
+    </div>
+
+    <div id="div_videoButton" class="videoBtn">
+        <div>
+            <!--<span id="icon_minMax" onclick="minimiseVedioCall();" class="minBtn" style="margin-right:4%; font-size:30px;color: #fff;"><i class="zmdi zmdi-caret-down"></i></span>-->
+            <img src="img/unmute_audio.png" height=30px; id= "img_mike" onclick="minimiseVedioCall();" style="margin-left: 4%;" />
+            <img src="img/unmute_video.png" height=30px; id="img_video"  />
+            <img src="img/disconnect.png" height=30px; id="hangOn" />
+            <img src="img/camera_switch.png" height=30px; id="switchCamera" />
+            <img src="img/unmute_speaker.png" height=30px; id="img_peaker" />
+        </div>
+    </div>
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+</body>
+
+</html>
