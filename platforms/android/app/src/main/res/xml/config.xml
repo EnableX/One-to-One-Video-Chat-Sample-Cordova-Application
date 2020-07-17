@@ -4,6 +4,10 @@
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
     </feature>
+    <feature name="EnxCordovaPlugin">
+        <param name="android-package" value="com.enablex.EnxCordovaPlugin" />
+        <param name="onload" value="true" />
+    </feature>
     <name>SampleApp</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
@@ -24,8 +28,4 @@
     <access origin="*" />
     <allow-intent href="market:*" />
     <preference name="loglevel" value="DEBUG" />
-    <feature name="EnxCordovaPlugin">
-        <param name="android-package" value="com.enablex.EnxCordovaPlugin" />
-        <param name="onload" value="true" />
-    </feature>
 </widget>

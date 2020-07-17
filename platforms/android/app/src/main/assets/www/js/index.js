@@ -19,23 +19,60 @@
 var app = {
   // Application Constructor
   initialize: function () {
-    // document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-    //window.EnxCordovaPlugin.getPrint();
-    document.getElementById("conferenceDiv").style.display = "none";
-    document.getElementById("div_videoButton").style.display = "none";
-    // var url = "https://meeting-demo-qa.enablex.io/createToken/";
-    // var loginString = "name=" + "Jay" + "&role=" + "participant" + "&user_ref=" + "2236" + "&roomId=" + "5ee753e657151f51c8f78e63";
-    var url = "https://vc-mt.vcloudx.com/createToken/";
+    /* To try the app with Enablex hosted service you need to set the kTry = true */
+        var kTry      = true;
+    /*Your webservice host URL, Keet the defined host when kTry = true */
+          var kBasedURL = "https://demo.enablex.io/";
+    /*The following information required, Only when kTry = true, When you hosted your own webservice remove these fileds*/
+    
+    /*Use enablec portal to create your app and get these following credentials*/
+          var kAppId    = "AppId";
+          var kAppkey   = "AppKey";
 
-    var loginString = { "name": "Jay", "role": "participant", "user_ref": "2236", "roomId": "5ea01a8e5e981a058b307222" };
-    $("#joinButton").click(function () {
-      // window.EnxCordovaPlugin.getPrint();
-      console.log('loginString Event: ' + loginString);
-      console.log('url Event: ' + url);
+  
+
+    var auiodMute = false;
+    var videoMute = false;
+    
+    document.getElementById("div_videoButton").style.display = "none";
+    
+
+    var hedare = (kTry) ? { "x-app-id" : kAppId , "x-app-key" : kAppkey} : {};
+    
+    console.log("hedare Event: " + hedare);
+    $("#createRoom").click(function(){
+      var nameText = document.getElementById("name").value;
+    if(nameText.length == 0){
+      alert("Enter Your name");
+      return;
+    }
       $.ajax({
-        url: url,
-        type: "POST",
-        data: loginString,
+          url: kBasedURL + "createRoom",
+          type: "POST",
+          headers: hedare,
+      success: function(result){
+          // alert(result.result);
+          console.log("hedare Event: " + result.room);
+          var roomDetails =  result.room;
+          console.log("hedare Event: " + roomDetails.room_id);
+              document.getElementById("roomid").value = roomDetails.room_id;
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log("Error Message" + textStatus + jqXHR.responseText);
+          }
+      });
+    });
+
+    $("#joinButton").click(function () {
+        var nameText = document.getElementById("name").value;
+        var roomID = document.getElementById("roomid").value;
+        var loginString = {"name": nameText, "role": "participant", "user_ref": "2236", "roomId": roomID };
+        console.log('loginString Event: ' + loginString);
+        $.ajax({
+          url: kBasedURL + "createToken",
+          type: "POST",
+          data: loginString,
+          headers: hedare,
         success: handleResult,
         error: function (jqXHR, textStatus, errorThrown) {
           console.log("Error Message" + textStatus + jqXHR.responseText);
@@ -85,19 +122,22 @@ var app = {
         };
         window.EnxCordovaPlugin.joinRoom(result.token, streamOpt, roomOpt);
         $("#muteAudio").click(function () {
-          window.EnxCordovaPlugin.muteSelfAudio(true);
+          if(!auiodMute){
+            window.EnxCordovaPlugin.muteSelfAudio(true);
+          }
+          else{
+            window.EnxCordovaPlugin.muteSelfAudio(false);
+          }
         });
 
         $("#muteVideo").click(function () {
-          window.EnxCordovaPlugin.muteSelfVideo(true);
-        });
-
-        $("#unmuteAudio").click(function () {
-          window.EnxCordovaPlugin.muteSelfAudio(false);
-        });
-
-        $("#unmuteVideo").click(function () {
-          window.EnxCordovaPlugin.muteSelfVideo(false);
+          if(!videoMute){
+            window.EnxCordovaPlugin.muteSelfVideo(true);
+          }
+          else{
+            window.EnxCordovaPlugin.muteSelfVideo(false);
+          }
+          
         });
         $("#switchCamera").click(function () {
           window.EnxCordovaPlugin.switchCamera(false, function (data) {
@@ -114,18 +154,36 @@ var app = {
           });
         });
         $("#Speaker").click(function () {
-          var deviceName = "Speaker";
-          window.EnxCordovaPlugin.switchMediaDevice(deviceName, function (data) {
-            console.log('Excelsior succuss! switchMediaDevice ' + JSON.stringify(data.data));
-          }, function (err) {
-            console.log('Uh oh... error resizeLocalView ' + JSON.stringify(err));
-          });
+          window.EnxCordovaPlugin.getSelectedDevice(function(data){
+            console.log('Excelsior succuss! getSelectedDevice ' + JSON.stringify(data.data));
+            var currentDevice  = data.data;
+            window.EnxCordovaPlugin.getDevices(function(data){
+              console.log('Excelsior succuss! getDevices ' + JSON.stringify(data.data));
+                //var allconnectedMedia  = JSON.stringify(data.data);
+                var connectedMedia = data.data;
+                console.log("fileter media " + connectedMedia);
+                var meida;
+                for (meida of connectedMedia) {
+                  if(meida === currentDevice){
+                    console.log("Available Media" + meida);
+                  }
+                  else{
+                    window.EnxCordovaPlugin.switchMediaDevice(meida, function (data) {
+                      console.log('Excelsior succuss! switchMediaDevice ' + JSON.stringify(data.data));
+                    }, function (err) {
+                        console.log('Uh oh... error resizeLocalView ' + JSON.stringify(err));
+                    });
+                    break;
+                  }
+                }
+              
+            })
+          })
         });
-        
         window.EnxCordovaPlugin.addEventListner("onRoomConnected", function (data) {
           console.log('Excelsior succuss! resizeViewOptions ' + JSON.stringify(data.data));
           document.getElementById("joiningDiv").style.display = "none";
-          document.getElementById("conferenceDiv").style.display = "block";
+          //document.getElementById("conferenceDiv").style.display = "block";
           document.getElementById("div_videoButton").style.display = "block";
           initLocalView();
           initRemoteView();
@@ -134,31 +192,59 @@ var app = {
           console.log('Excelsior succuss! onRoomDisConnected ' + JSON.stringify(data.data));
           document.getElementById("joiningDiv").style.display = "block";
           document.getElementById("div_videoButton").style.display = "none";
-          document.getElementById("conferenceDiv").style.display = "none";
+          //document.getElementById("conferenceDiv").style.display = "none";
         });
         window.EnxCordovaPlugin.addEventListner("onAudioEvent", function (data) {
-          console.log('Excelsior succuss! onAudioEvent ' + JSON.stringify(data.data));
+          console.log('Excelsior succuss! onAudioEvent ' + JSON.stringify(data.data.result));
+          var response = data.data;
+          //var msg = JSON.stringify(data.data.msg);
+          console.log("audio msg" + response.msg);
+          if(response.msg === "Audio Off"){
+            auiodMute = true;
+            document.getElementById("muteAudio").src = "img/mute_audio.png";
+          }
+          else{
+            auiodMute = false;
+            document.getElementById("muteAudio").src = "img/unmute_audio.png";
+          }
         });
         window.EnxCordovaPlugin.addEventListner("onVideoEvent", function (data) {
           console.log('Excelsior succuss! onVideoEvent ' + JSON.stringify(data.data));
-          var x = data.data.msg;
+          var response = data.data;
+          console.log("Video msg" + response.msg);
+          if(response.msg === "Video Off"){
+            videoMute = true;
+            document.getElementById("muteVideo").src = "img/mute_video.png";
+          }
+          else{
+            videoMute = false;
+            document.getElementById("muteVideo").src = "img/unmute_video.png";
+          }
+          
         });
         window.EnxCordovaPlugin.addEventListner("onEventError", function (data) {
           console.log('Excelsior EventError! onEventError ' + JSON.stringify(data.data));
         });
         window.EnxCordovaPlugin.addEventListner("onNotifyDeviceUpdate", function (data) {
           console.log('Excelsior EventError! onNotifyDeviceUpdate ' + JSON.stringify(data.data));
+          var deviceName  = data.data;
+          if(deviceName === "EARPIECE"){
+            document.getElementById("Speaker").src = "img/mute_speaker.png";
+          }
+          else{
+            document.getElementById("Speaker").src = "img/unmute_speaker.png";
+          }
         });
       }
     });
     //Init LocalView
     function initLocalView() {
       console.log('Excelsior initLocalView! ');
-      var clientHeight = document.getElementById('conferenceDiv').clientHeight + 20;
+      //var clientHeight = document.getElementById('conferenceDiv').clientHeight + 20;
       var initLocalViewOptions = {
         height: 130,
         width: 100,
-        margin_top: clientHeight,
+        margin_top: 50,
         margin_left: 0,
         margin_right: 15,
         margin_bottom: 10,
@@ -172,10 +258,12 @@ var app = {
     }
     function initRemoteView() {
       console.log('Excelsior initRemoteView! ');
-      var clientHeight = document.getElementById('conferenceDiv').clientHeight;
+      //var clientHeight = document.getElementById('conferenceDiv').clientHeight;
+      var clientHeight = document.getElementById('div_videoButton').clientHeight;
       console.log('Excelsior initRemoteView! ' + clientHeight);
       var initRemoteViewOptions = {
-        margin_top: clientHeight
+        margin_top: 22,
+        margin_bottom : (clientHeight - 22)
       };
       window.EnxCordovaPlugin.initRemoteView(initRemoteViewOptions, function (data) {
         console.log('Remore Player Excelsior succuss! ' + JSON.stringify(data.data));
