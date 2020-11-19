@@ -1,6 +1,6 @@
 # 1-to-1 RTC: A Sample Cordova App with EnableX Cordova Toolkit
 
-This is a Sample Cordova App demonstrates the use of EnableX (https://www.enablex.io) platform Server APIs and Cordova Toolkit.  It allows developers to ramp up on app development by hosting on their own devices. 
+This is a Sample Cordova App demonstrates the use of EnableX (https://www.enablex.io/cpaas/video-api) platform Server APIs and Cordova Toolkit.  It allows developers to ramp up on app development by hosting on their own devices. 
 
 This App creates a virtual Room on the fly  hosted on the Enablex platform using REST calls and uses the Room credentials (i.e. Room Id) to connect to the virtual Room as a mobile client.  The same Room credentials can be shared with others to join the same virtual Room to carry out a RTC (Real Time Communication) session. 
 
@@ -12,7 +12,7 @@ This App creates a virtual Room on the fly  hosted on the Enablex platform using
 
 #### 1.1.1 App Id and App Key 
 
-* Register with EnableX [https://www.enablex.io] 
+* Register with EnableX [https://portal.enablex.io/cpaas/trial-sign-up/] 
 * Login to the EnableX Portal
 * Create your Application Key
 * Get your App ID and App Key delivered to your Email
@@ -306,5 +306,5 @@ This Sample Applcation uses EnableX Cordova Toolkit to communicate with EnableX 
 EnableX provides hosted Vemo Application of different use-case for you to try out.
 
 1. Try a quick Video Call: https://try.enablex.io
-2. Try Apps on Demo Zone: https://portal.enablex.io/demo-zone/
-3. Try Meeting & Webinar:  https://www.enablex.io/ucaas/
+2. Sign up for a free trial https://portal.enablex.io/cpaas/trial-sign-up/
+
