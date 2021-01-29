@@ -1,20 +1,11 @@
-# 1-to-1 RTC: A Sample Cordova App with EnableX Cordova Toolkit
-
-This is a Sample Cordova App demonstrates the use of EnableX (https://www.enablex.io/cpaas/video-api) platform Server APIs and Cordova Toolkit.  It allows developers to ramp up on app development by hosting on their own devices. 
-
-This App creates a virtual Room on the fly  hosted on the Enablex platform using REST calls and uses the Room credentials (i.e. Room Id) to connect to the virtual Room as a mobile client.  The same Room credentials can be shared with others to join the same virtual Room to carry out a RTC (Real Time Communication) session. 
-
-> EnableX Developer Center: https://developer.enablex.io/
-
 ## 1. How to get started
 
 ### 1.1 Pre-Requisites
 
 #### 1.1.1 App Id and App Key 
 
-* Register with EnableX [https://portal.enablex.io/cpaas/trial-sign-up/] 
-* Login to the EnableX Portal
-* Create your Application Key
+* Register with EnableX [https://www.enablex.io] 
+* Create your Application
 * Get your App ID and App Key delivered to your Email
 
 
@@ -22,34 +13,23 @@ This App creates a virtual Room on the fly  hosted on the Enablex platform using
 
 * Clone or download this Repository [https://github.com/EnableX/One-to-One-Video-Chat-Sample-Cordova-Application.git] 
 
-#### 1.1.3 Test Application Server
 
-You need to setup an Application Server to provision Web Service API for your Cordova Application to communicate enabling Video Session. 
+#### 1.1.3 Sample App Server 
 
-To help you to try our Cordova Application quickly, without having to setup Applciation Server, this Application is shipped pre-configured to work in a "try" mode with EnableX hosted Application Server i.e. https://demo.enablex.io. 
-
-Our Application Server restricts a single Session Duation to 10 minutes, and allows 1 moderator and note more than 3 Participant in a Session.
-
-Once you tried EnableX Cordova Sample Application, you may need to setup your own  Application Server and verify your Application to work with your Application Server.  More on this, read Point 2 later in the Document.
-
-
+* Clone or download this Repository [https://github.com/EnableX/Sample-Web-App-1to1-RTC.git] & follow the steps further 
+* You need to use App ID and App Key to run this Service. 
+* Your Cordova Sample Application Client End Point needs to connect to this Service to create Virtual Room.
+* Follow README file of this Repository to setup the Service.
 
 #### 1.1.4 Configure Cordova Sample Client 
 
 * Open the Cordova sample App
 * Go to index.js and change the following:
     ``` 
-    /* To try the app with Enablex hosted service you need to set the kTry = true */
-        var kTry      = true;
-    /*Your webservice host URL, Keet the defined host when kTry = true */
-          var kBasedURL = "https://demo.enablex.io/";
-    /*The following information required, Only when kTry = true, When you hosted your own webservice remove these fileds*/
-    
-    /*Use enablec portal to create your app and get these following credentials*/
-          var kAppId    = "AppId";
-          var kAppkey   = "AppKey";
-
-    ``
+    var userName = "USERNAME"  /* HTTP Basic Auth Username of App Server */
+    var password = "PASSWORD"  /* HTTP Basic Auth Password of App Server */
+    var kBaseURL = "FQDN"      /* FQDN of of App Server URL */
+    ```
 
  Note: The distributable comes with demo username and password for the Service.
 
@@ -115,37 +95,10 @@ Make sure You have Cordova 3.5.0 or greater installed. If you haven't, take a lo
     cordova run android // to run Android project
     ```
 
-### 1.3 Test
-
-#### 1.3.1 Open the App
-
-* Open the App in your Device. You get a form to enter Credentials i.e. Name & Room Id.
-* You need to create a Room by clicking the "Create Room" button.
-* Once the Room Id is created, you can use it and share with others to connect to the Virtual Room to carry out a RTC Session either as a Moderator or a Participant (Choose applicable Role in the Form).
-
-Note: Only one user with Moderator Role allowed to connect to a Virtual Room while trying with EnableX Hosted Service. Your Own Application Server may allow upto 5 Moderators.
-
-Note:- If you used any emulator/simulator your local stream will not create. It will create only on real device.
-
-## 2 Setup Your Own Application Server
-
-You may need to setup your own Application Server after you tried the Sample Application with EnableX hosted Server. We have differnt variant of Appliciation Server Sample Code, pick one in your preferred language and follow instructions given in respective README.md file.
-
-*NodeJS: [https://github.com/EnableX/Video-Conferencing-Open-Source-Web-Application-Sample.git]
-*PHP: [https://github.com/EnableX/Group-Video-Call-Conferencing-Sample-Application-in-PHP]
-
-Note the following:
-
-* You need to use App ID and App Key to run this Service.
-* Your Cordova Client End Point needs to connect to this Service to create Virtual Room and Create Token to join session.
-* Application Server is created using EnableX Server API, a Rest API Service helps in provisioning, session access and pos-session reporting.  
-
-To know more about Server API, go to:
-https://developer.enablex.io/latest/server-api/
-
-## 3. Getting Started on your Project:
+## 2. Getting Started on your Project:
 
 All your editing will be done in your www folder.
+
 
 All JavaScript code should be written in `onDeviceReady` function in `/js/index.js` because it is executed after all dependencies has loaded.
 
@@ -198,7 +151,7 @@ After callback registered, User needs to call joinRoom().
           chat_only: false,
         };
      
-    window.EnxCordovaPlugin.joinRoom(result.token, streamOpt, roomOpt);
+    window.EnxRtc.joinRoom(result.token, streamOpt, roomOpt);
 ``` 
 After joining room `onRoomConnected` listener is called. In this listener you have to initiate local view and remote view by following function.
 
@@ -213,7 +166,7 @@ After joining room `onRoomConnected` listener is called. In this listener you ha
         margin_bottom: 00,
         position: "right"
       };
-    window.EnxCordovaPlugin.initLocalView(initLocalViewOptions, function (data) {
+    window.EnxRtc.initLocalView(initLocalViewOptions, function (data) {
         console.log(JSON.stringify(data.data));
       }, function (err) {
         console.log('Uh oh... error' + JSON.stringify(err));
@@ -230,7 +183,7 @@ After joining room `onRoomConnected` listener is called. In this listener you ha
         position: "right"
       };
 
-    window.EnxCordovaPlugin.initRemoteView(initRemoteViewOptions, function (data) {
+    window.EnxRtc.initRemoteView(initRemoteViewOptions, function (data) {
         console.log(JSON.stringify(data.data));
       }, function (err) {
         console.log('Uh oh... error' + JSON.stringify(err));
@@ -240,14 +193,14 @@ After joining room `onRoomConnected` listener is called. In this listener you ha
 For mute/UnMute Audio
 
 ```
-    window.EnxCordovaPlugin.muteSelfAudio(true/false);
+    window.EnxRtc.muteSelfAudio(true/false);
     true - mute
     falsw - unmute
 ```
 For mute/UnMute Video.
 
 ```
-    window.EnxCordovaPlugin.muteSelfVideo(true/false);
+    window.EnxRtc.muteSelfVideo(true/false);
     true - mute
     falsw - unmute
 ```
@@ -256,55 +209,44 @@ Registered all Listener in onDeviceReady function
 ```
 onDeviceReady: function() {
     // Do Your Stuff Here!
-window.EnxCordovaPlugin.addEventListner("onRoomConnected", function (data) {
+window.EnxRtc.addEventListner("onRoomConnected", function (data) {
             console.log(JSON.stringify(data.data));
             });
-window.EnxCordovaPlugin.addEventListner("onRoomError", function (data) {
+window.EnxRtc.addEventListner("onRoomError", function (data) {
             console.log(JSON.stringify(data.data));
         });
-window.EnxCordovaPlugin.addEventListner("onEventError", function (data) {
+window.EnxRtc.addEventListner("onEventError", function (data) {
         console.log(JSON.stringify(data.data));
         });
-window.EnxCordovaPlugin.addEventListner("onAudioEvent", function (data) {
+window.EnxRtc.addEventListner("onAudioEvent", function (data) {
         console.log(JSON.stringify(data.data));
         });
-window.EnxCordovaPlugin.addEventListner("onVideoEvent", function (data) {
+window.EnxRtc.addEventListner("onVideoEvent", function (data) {
           console.log(JSON.stringify(data.data));
         });
-window.EnxCordovaPlugin.addEventListner("onRoomDisConnected", function (data) {
+window.EnxRtc.addEventListner("onRoomDisConnected", function (data) {
           console.log(+ JSON.stringify(data.data));
         });
-window.EnxCordovaPlugin.addEventListner("onNotifyDeviceUpdate",function (data) {
+window.EnxRtc.addEventListner("onNotifyDeviceUpdate",function (data) {
            console.log( JSON.stringify(data.data));
         });
-window.EnxCordovaPlugin.addEventListner("onScreenSharedStarted", function (data) {
+window.EnxRtc.addEventListner("onScreenSharedStarted", function (data) {
           console.log(JSON.stringify(data.data));
         });
-window.EnxCordovaPlugin.addEventListner("onScreenSharedStopped", function (data) {
+window.EnxRtc.addEventListner("onScreenSharedStopped", function (data) {
           console.log(JSON.stringify(data.data));
         });
-window.EnxCordovaPlugin.addEventListner("onCanvasStarted", function (data) {
+window.EnxRtc.addEventListner("onCanvasStarted", function (data) {
           console.log(JSON.stringify(data.data));
         });
-window.EnxCordovaPlugin.addEventListner("onCanvasStopped", function (data) {
+window.EnxRtc.addEventListner("onCanvasStopped", function (data) {
           console.log(JSON.stringify(data.data));
         });
-window.EnxCordovaPlugin.addEventListner("onUserConnected", function (data) {
+window.EnxRtc.addEventListner("onUserConnected", function (data) {
           console.log(JSON.stringify(data.data));
         });
-window.EnxCordovaPlugin.addEventListner("onUserDisConnected", function (data) {
+window.EnxRtc.addEventListner("onUserDisConnected", function (data) {
           console.log(JSON.stringify(data.data));
         });
     }
 ```
-## 4 Cordova Toolkit
-
-This Sample Applcation uses EnableX Cordova Toolkit to communicate with EnableX Servers to initiate and manage Real Time Communications. You might need to update your Application with latest version of EnableX cordova Toolkit time as and when a new release is avaialble.   
-
-## 4 Demo
-
-EnableX provides hosted Vemo Application of different use-case for you to try out.
-
-1. Try a quick Video Call: https://try.enablex.io
-2. Sign up for a free trial https://portal.enablex.io/cpaas/trial-sign-up/
-
