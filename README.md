@@ -41,17 +41,17 @@
 
 #### 1.1.6 How to setup cordova plugin Android/iOS
 
-    ### Android
+### Android
     
 After adding Cordova Enablex plugin
 ### Step 1. 
-    `Go to platfrom inside Cordova project and open Android folder`
+    Go to platfrom inside Cordova project and open Android folder
 
     If Android platform already added, remove Android and add again using the below command: 
     ionic cordova platform rm android && ionic cordova platform add android`
     
 ### Step 2. 
-    ```Set the Minimum SDK version and desugaring in gradle.properties file as shown:```
+    Set the Minimum SDK version and desugaring in gradle.properties file as shown:
 
 ![group1](./group1.png) 
 
@@ -62,7 +62,7 @@ After adding Cordova Enablex plugin
     
 ### Step 3. 
 
-    ```Add the required libraries like webrtc and socket in the project. properties file as shown below:```
+    Add the required libraries like webrtc and socket in the project. properties file as shown below:
     
 ![group2](./group2.png) 
     
@@ -71,7 +71,7 @@ After adding Cordova Enablex plugin
     
 ### Step 4. 
 
-    `If you face “merge debug resource failed” error, then add packagingOptions in app level build.gradle file in android block `
+    If you face “merge debug resource failed” error, then add packagingOptions in app level build.gradle file in android block 
     
     Execution failed for task ':app:mergeDebugJavaResource'. 
         > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade 
@@ -90,11 +90,11 @@ After adding Cordova Enablex plugin
                exclude("META-INF/*.kotlin_module")  
              } 
 
-    ### iOS
+### iOS
     
-        `After adding Cordova Enablex plugin please add ios project as below command`
+        After adding Cordova Enablex plugin please add ios project as below command
         
-        `cordova platform add ios`
+        cordova platform add ios
         
         It will install all dependency enableX library through Pod. After that go to your iOS project folder and open your xcode , setup your certificate and then build the app either command line or through xcode. 
     
