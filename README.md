@@ -26,9 +26,15 @@
 * Open the Cordova sample App
 * Go to index.js and change the following:
     ``` 
-    var userName = "USERNAME"  /* HTTP Basic Auth Username of App Server */
-    var password = "PASSWORD"  /* HTTP Basic Auth Password of App Server */
-    var kBaseURL = "FQDN"      /* FQDN of of App Server URL */
+    /* To try the app with Enablex hosted service you need to set the kTry = true */
+        var kTry      = true;
+    /*Your webservice host URL, Keet the defined host when kTry = true */
+          var kBasedURL = "https://demo.enablex.io/";
+    /*The following information required, Only when kTry = true, When you hosted your own webservice remove these fileds*/
+
+    /*Use enablec portal to create your app and get these following credentials*/
+          var kAppId    = "AppId";
+          var kAppkey   = "AppKey";
     ```
 
  Note: The distributable comes with demo username and password for the Service.

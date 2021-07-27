@@ -19,22 +19,34 @@
 var app = {
   // Application Constructor
   initialize: function () {
-    // document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-    //window.EnxRtc.getPrint();
-    document.getElementById("conferenceDiv").style.display = "none";
     document.getElementById("div_videoButton").style.display = "none";
-    var url = "https://meeting-demo-qa.enablex.io/createToken/";
-     var loginString = "name=" + "Jay" + "&role=" + "participant" + "&user_ref=" + "2236" + "&roomId=" + "5f83f95f3a8ad03af54eab4a";
-    //  var url = "https://vc-mt.vcloudx.com/createToken/";
-    // var loginString = { "name": "Jay", "role": "moderator", "user_ref": "2236", "roomId": "5ee753e657151f51c8f78e63" };
-    $("#joinButton").click(function () {
-      // window.EnxRtc.getPrint();
+
+/* To try the app with Enablex hosted service you need to set the kTry = true */
+var kTry      = true;
+/*Your webservice host URL, Keet the defined host when kTry = true */
+var kBasedURL = "https://demo.enablex.io/";
+/*The following information required, Only when kTry = true, When you hosted your own webservice remove these fileds*/
+
+/*Use enablec portal to create your app and get these following credentials*/
+var kAppId    = "appID";
+var kAppkey   = "AppKey";
+     
+$("#joinButton").click(function () {
+     
+      if($("#roomid").val() == ""){
+        alert ("Please create room first");
+        return;
+      }
+      var hedare = (kTry) ? { "x-app-id" : kAppId , "x-app-key" : kAppkey, "Accept" : "application/json","Content-Type" :"application/json"} : {"Accept" : "application/json","Content-Type" :"application/json"};
+     var loginString = "{\"name\":\""+$("#name").val()+"\",\"role\":\""+"participant"+"\",\"user_ref\":\""+"2236"+"\",\"roomId\":\""+$("#roomid").val()+"\"}";
+     let url = kBasedURL+"createToken";
       console.log('loginString Event: ' + loginString);
       console.log('url Event: ' + url);
       $.ajax({
         url: url,
         type: "POST",
-        data: loginString,
+        headers:hedare,
+        data:loginString,
         success: handleResult,
         error: function (jqXHR, textStatus, errorThrown) {
           console.log("Error Message" + textStatus + jqXHR.responseText);
@@ -72,7 +84,7 @@ var app = {
           avatarWidth: 200,
         };
         var roomOpt = {
-          activeviews: "list",
+          activeviews: "view",
           allow_reconnect: true,
           number_of_attempts: 3,
           timeout_interval: 15,
@@ -82,9 +94,12 @@ var app = {
         };
         window.EnxRtc.joinRoom(result.token, streamOpt, roomOpt, function (data) {
           console.log('Excelsior succuss! Switch Camera ' + JSON.stringify(data.data));
-          document.getElementById("joiningDiv").style.display = "none";
-          document.getElementById("conferenceDiv").style.display = "block";
-          document.getElementById("div_videoButton").style.display = "block";
+
+
+      document.getElementById("joiningDiv").style.display= "none";
+
+         document.getElementById("div_videoButton").style.display= "block";
+        
           initLocalView();
           initRemoteView();
           initEventListner();
@@ -486,16 +501,53 @@ var app = {
             console.log('Uh oh... error resizeViewOptions ' + JSON.stringify(err));
           });
         }
+      
       }
     });
+
+    $("#createRoom").click(function () {
+      if($("#name").val() == ""){
+        alert ("Kindly Enter Your name");
+        return;
+      }
+      var hedare = (kTry) ? { "x-app-id" : kAppId , "x-app-key" : kAppkey, "Accept" : "application/json","Content-Type" :"application/json"} : {"Accept" : "application/json","Content-Type" :"application/json"};
+       let url = kBasedURL+"createRoom";
+       console.log("Url Faired" + url);
+       
+      
+       $.ajax({
+        url: url,
+        type: "POST",
+        
+        data:{},
+        //contentType: "application/json",
+       // dataType: 'json',
+        headers:hedare,
+        success: handleResult1,
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.log("Error Message" + textStatus + jqXHR.responseText);
+        }
+      });
+      function handleResult1(result) {
+        
+
+        setRoomID(result.room.room_id)
+      }
+    });
+function setRoomID(room_id){
+  var inputF = document.getElementById("roomid");
+  
+  inputF.value = room_id;
+}
+
     //Init LocalView
     function initLocalView() {
       console.log('Excelsior initLocalView! ');
-      var clientHeight = document.getElementById('conferenceDiv').clientHeight + 20;
+ 
       var initLocalViewOptions = {
         height: 130,
         width: 100,
-        margin_top: clientHeight,
+        margin_top: 20,
         margin_left: 0,
         margin_right: 15,
         margin_bottom: 10,
@@ -509,12 +561,12 @@ var app = {
     }
     function initRemoteView() {
       console.log('Excelsior initRemoteView! ');
-      var clientHeight = document.getElementById('conferenceDiv').clientHeight;
-      console.log('Excelsior initRemoteView! ' + clientHeight);
+     
+  
     var clintButtonHeight = document.getElementById('div_videoButton').clientHeight;
 
       var initRemoteViewOptions = {
-        margin_top: clientHeight,
+        margin_top: 0,
         margin_bottom :clintButtonHeight
       };
       window.EnxRtc.initRemoteView(initRemoteViewOptions, function (data) {
@@ -538,7 +590,7 @@ var app = {
         console.log('Excelsior succuss! onRoomDisConnected ' + JSON.stringify(data.data));
         document.getElementById("joiningDiv").style.display = "block";
         document.getElementById("div_videoButton").style.display = "none";
-        document.getElementById("conferenceDiv").style.display = "none";
+        
       });
       window.EnxRtc.addEventListner("onAudioEvent", function (data) {
         console.log('Excelsior succuss! onAudioEvent ' + JSON.stringify(data.data));

@@ -19,59 +19,22 @@
 var app = {
   // Application Constructor
   initialize: function () {
-    /* To try the app with Enablex hosted service you need to set the kTry = true */
-        var kTry      = true;
-    /*Your webservice host URL, Keet the defined host when kTry = true */
-          var kBasedURL = "https://demo.enablex.io/";
-    /*The following information required, Only when kTry = true, When you hosted your own webservice remove these fileds*/
-    
-    /*Use enablec portal to create your app and get these following credentials*/
-          var kAppId    = "5ef5b31690ef80b4300b0bd2";
-          var kAppkey   = "uJehyWaAu4uvyTupeJyJuHu6ygyYaGu2yzuq";
-
-  
-
-    var auiodMute = false;
-    var videoMute = false;
+    // document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+    //window.EnxRtc.getPrint();
+    document.getElementById("conferenceDiv").style.display = "none";
     document.getElementById("div_videoButton").style.display = "none";
-    
-
-    var hedare = (kTry) ? { "x-app-id" : kAppId , "x-app-key" : kAppkey} : {};
-    
-    console.log("hedare Event: " + hedare);
-    $("#createRoom").click(function(){
-      var nameText = document.getElementById("name").value;
-    if(nameText.length == 0){
-      alert("Enter Your name");
-      return;
-    }
-      $.ajax({
-          url: kBasedURL + "createRoom",
-          type: "POST",
-          headers: hedare,
-      success: function(result){
-          // alert(result.result);
-          console.log("hedare Event: " + result.room);
-          var roomDetails =  result.room;
-          console.log("hedare Event: " + roomDetails.room_id);
-              document.getElementById("roomid").value = roomDetails.room_id;
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            console.log("Error Message" + textStatus + jqXHR.responseText);
-          }
-      });
-    });
-
+    var url = "https://meeting-demo-qa.enablex.io/createToken/";
+     var loginString = "name=" + "Jay" + "&role=" + "participant" + "&user_ref=" + "2236" + "&roomId=" + "5f83f95f3a8ad03af54eab4a";
+    //  var url = "https://vc-mt.vcloudx.com/createToken/";
+    // var loginString = { "name": "Jay", "role": "moderator", "user_ref": "2236", "roomId": "5ee753e657151f51c8f78e63" };
     $("#joinButton").click(function () {
-        var nameText = document.getElementById("name").value;
-        var roomID = document.getElementById("roomid").value;
-        var loginString = {"name": nameText, "role": "participant", "user_ref": "2236", "roomId": roomID };
-        console.log('loginString Event: ' + loginString);
-        $.ajax({
-          url: kBasedURL + "createToken",
-          type: "POST",
-          data: loginString,
-          headers: hedare,
+      // window.EnxRtc.getPrint();
+      console.log('loginString Event: ' + loginString);
+      console.log('url Event: ' + url);
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: loginString,
         success: handleResult,
         error: function (jqXHR, textStatus, errorThrown) {
           console.log("Error Message" + textStatus + jqXHR.responseText);
@@ -83,7 +46,7 @@ var app = {
           minWidth: 320,
           minHeight: 180,
           maxWidth: 1280,
-          maxHeight: 720,
+          maxHeight: 720
         };
         var streamOpt = {
           audio: true,
@@ -91,8 +54,6 @@ var app = {
           data: true,
           audioOnlyMode: false,
           framerate: 30,
-          maxVideoBW: 1500,
-          minVideoBW: 150,
           videoSize: videoSize,
           audioMuted: false,
           videoMuted: false,
@@ -119,137 +80,428 @@ var app = {
           forceTurn: false,
           chat_only: false,
         };
-        window.EnxCordovaPlugin.joinRoom(result.token, streamOpt, roomOpt);
+        window.EnxRtc.joinRoom(result.token, streamOpt, roomOpt, function (data) {
+          console.log('Excelsior succuss! Switch Camera ' + JSON.stringify(data.data));
+          document.getElementById("joiningDiv").style.display = "none";
+          document.getElementById("conferenceDiv").style.display = "block";
+          document.getElementById("div_videoButton").style.display = "block";
+          initLocalView();
+          initRemoteView();
+          initEventListner();
+        }, function (err) {
+          console.log('Uh oh... error hideSelfView ' + JSON.stringify(err));
+        });
         $("#muteAudio").click(function () {
-          if(!auiodMute){
-            window.EnxCordovaPlugin.muteSelfAudio(true);
-          }
-          else{
-            window.EnxCordovaPlugin.muteSelfAudio(false);
-          }
+          window.EnxRtc.muteSelfAudio(true);
         });
 
         $("#muteVideo").click(function () {
-          if(!videoMute){
-            window.EnxCordovaPlugin.muteSelfVideo(true);
-          }
-          else{
-            window.EnxCordovaPlugin.muteSelfVideo(false);
-          }
-          
+          window.EnxRtc.muteSelfVideo(true);
+        });
+
+        $("#unmuteAudio").click(function () {
+          window.EnxRtc.muteSelfAudio(false);
+        });
+
+        $("#unmuteVideo").click(function () {
+          window.EnxRtc.muteSelfVideo(false);
         });
         $("#switchCamera").click(function () {
-          window.EnxCordovaPlugin.switchCamera(false, function (data) {
+          window.EnxRtc.switchCamera(false, function (data) {
             console.log('Excelsior succuss! Switch Camera ' + JSON.stringify(data.data));
           }, function (err) {
             console.log('Uh oh... error hideSelfView ' + JSON.stringify(err));
           });
         });
         $("#hangOn").click(function () {
-          window.EnxCordovaPlugin.disconnect(false, function (data) {
+          window.EnxRtc.disconnect(false, function (data) {
             console.log('Excelsior succuss! hideSelfView ' + JSON.stringify(data.data));
           }, function (err) {
             console.log('Uh oh... error hideSelfView ' + JSON.stringify(err));
           });
         });
+        $("#hideLocalView").click(function () {
+          window.EnxRtc.hideSelfView(true, function (data) {
+            console.log('Excelsior succuss! hideSelfView ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error hideSelfView ' + JSON.stringify(err));
+          });
+        });
+        $("#UnhideLocalView").click(function () {
+          window.EnxRtc.hideSelfView(false, function (data) {
+            console.log('Excelsior succuss! hideSelfView ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error hideSelfView ' + JSON.stringify(err));
+          });
+        });
+        $("#resizeLocalView").click(function () {
+          var resizeViewOptions = {
+            height: 200,
+            width: 200,
+            margin_top: 50,
+            margin_left: 0,
+            margin_right: 15,
+            margin_bottom: 20,
+            position: "bottom"
+          };
+          window.EnxRtc.resizeLocalView(resizeViewOptions, function (data) {
+            console.log('Excelsior succuss! resizeLocalView ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error resizeLocalView ' + JSON.stringify(err));
+          });
+        });
         $("#Speaker").click(function () {
-          window.EnxCordovaPlugin.getSelectedDevice(function(data){
+          var deviceName = "Speaker";
+          window.EnxRtc.switchMediaDevice(deviceName, function (data) {
+            console.log('Excelsior succuss! switchMediaDevice ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error resizeLocalView ' + JSON.stringify(err));
+          });
+        });
+        $("#Earpics").click(function () {
+          var deviceName = "EARPIECE";
+          window.EnxRtc.switchMediaDevice(deviceName, function (data) {
+            console.log('Excelsior succuss! switchMediaDevice ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error resizeLocalView ' + JSON.stringify(err));
+          });
+        });
+
+        $("#Current").click(function () {
+          window.EnxRtc.getSelectedDevice(function (data) {
             console.log('Excelsior succuss! getSelectedDevice ' + JSON.stringify(data.data));
-            var currentDevice  = data.data;
-            window.EnxCordovaPlugin.getDevices(function(data){
-              console.log('Excelsior succuss! getDevices ' + JSON.stringify(data.data));
-                //var allconnectedMedia  = JSON.stringify(data.data);
-                var connectedMedia = data.data;
-                console.log("fileter media " + connectedMedia);
-                var meida;
-                for (meida of connectedMedia) {
-                  if(meida === currentDevice){
-                    console.log("Available Media" + meida);
-                  }
-                  else{
-                    window.EnxCordovaPlugin.switchMediaDevice(meida, function (data) {
-                      console.log('Excelsior succuss! switchMediaDevice ' + JSON.stringify(data.data));
-                    }, function (err) {
-                        console.log('Uh oh... error resizeLocalView ' + JSON.stringify(err));
-                    });
-                    break;
-                  }
-                }
-              
-            })
-          })
+          }, function (err) {
+            console.log('Uh oh... error resizeLocalView ' + JSON.stringify(err));
+          });
         });
-        window.EnxCordovaPlugin.addEventListner("onRoomConnected", function (data) {
-          console.log('Excelsior succuss! resizeViewOptions ' + JSON.stringify(data.data));
-          document.getElementById("joiningDiv").style.display = "none";
-          //document.getElementById("conferenceDiv").style.display = "block";
-          document.getElementById("div_videoButton").style.display = "block";
-          initLocalView();
-          initRemoteView();
+        $("#allDevice").click(function () {
+          window.EnxRtc.getDevices(function (data) {
+            console.log('Excelsior succuss! getDevices ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error resizeLocalView ' + JSON.stringify(err));
+          });
         });
-        window.EnxCordovaPlugin.addEventListner("onRoomDisConnected", function (data) {
-          console.log('Excelsior succuss! onRoomDisConnected ' + JSON.stringify(data.data));
-          document.getElementById("joiningDiv").style.display = "block";
-          document.getElementById("div_videoButton").style.display = "none";
-          //document.getElementById("conferenceDiv").style.display = "none";
+        $("#resizeRemoteView").click(function () {
+          var clientHeight = document.getElementById('conferenceDiv').clientHeight;
+        var clintButtonHeight = document.getElementById('div_videoButton').clientHeight;
+          var resizeViewOptions = {
+            height: 200,
+            width: 200,
+            margin_top: clientHeight,
+            margin_left: 0,
+            margin_right: 15,
+            margin_bottom: clintButtonHeight,
+            position: "left"
+          };
+          window.EnxRtc.resizeRemoteView(resizeViewOptions, function (data) {
+            console.log('Excelsior succuss! resizeViewOptions ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error resizeViewOptions ' + JSON.stringify(err));
+          });
         });
-        window.EnxCordovaPlugin.addEventListner("onAudioEvent", function (data) {
-          console.log('Excelsior succuss! onAudioEvent ' + JSON.stringify(data.data.result));
-          var response = data.data;
-          //var msg = JSON.stringify(data.data.msg);
-          console.log("audio msg" + response.msg);
-          if(response.msg === "Audio Off"){
-            auiodMute = true;
-            document.getElementById("muteAudio").src = "img/mute_audio.png";
-          }
-          else{
-            auiodMute = false;
-            document.getElementById("muteAudio").src = "img/unmute_audio.png";
-          }
+        $("#DragView").click(function () {
+          console.log('Uh oh... error startDragging');
+          window.EnxRtc.startDragging("remote", true, function (data) {
+            console.log('Excelsior succuss! startDragging ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error startDragging ' + JSON.stringify(err));
+          });
         });
-        window.EnxCordovaPlugin.addEventListner("onVideoEvent", function (data) {
-          console.log('Excelsior succuss! onVideoEvent ' + JSON.stringify(data.data));
-          var response = data.data;
-          console.log("Video msg" + response.msg);
-          if(response.msg === "Video Off"){
-            videoMute = true;
-            document.getElementById("muteVideo").src = "img/mute_video.png";
-          }
-          else{
-            videoMute = false;
-            document.getElementById("muteVideo").src = "img/unmute_video.png";
-          }
-          
+        $("#extendconfernceduration").click(function () {
+          console.log('Uh oh... error extendconfernceduration');
+          window.EnxRtc.extendConferenceDuration();
         });
-        window.EnxCordovaPlugin.addEventListner("onEventError", function (data) {
-          console.log('Excelsior EventError! onEventError ' + JSON.stringify(data.data));
+        $("#lockRoom").click(function () {
+          console.log('Uh oh... error LockRoom');
+          window.EnxRtc.lockRoom();
         });
-        window.EnxCordovaPlugin.addEventListner("onNotifyDeviceUpdate", function (data) {
-          console.log('Excelsior EventError! onNotifyDeviceUpdate ' + JSON.stringify(data.data));
-          var deviceName  = data.data;
-          if(deviceName === "EARPIECE"){
-            document.getElementById("Speaker").src = "img/mute_speaker.png";
-          }
-          else{
-            document.getElementById("Speaker").src = "img/unmute_speaker.png";
-          }
+        $("#unLockRoom").click(function () {
+          console.log('Uh oh... error unLockRoom');
+          window.EnxRtc.unLockRoom();
         });
+        $("#dropUser").click(function () {
+          console.log('Uh oh... error dropUser');
+          window.EnxRtc.dropUser([clientid]);
+        });
+        $("#destroy").click(function () {
+          console.log('Uh oh... error destroy');
+          window.EnxRtc.destroy();
+        });
+        $("#hardMute").click(function () {
+          console.log('Uh oh... error hardMute');
+          window.EnxRtc.hardMute();
+        });
+
+        $("#hardUnMute").click(function () {
+          console.log('Uh oh... error hardUnMute');
+          window.EnxRtc.hardUnMute();
+        });
+        $("#hardUnMute").click(function () {
+          console.log('Uh oh... error hardUnMute');
+          window.EnxRtc.hardUnMute();
+        });
+        $("#startRecord").click(function () {
+          console.log('Uh oh... error startRecord');
+          window.EnxRtc.startRecord();
+        });
+        $("#stopRecord").click(function () {
+          console.log('Uh oh... error stopRecord');
+          window.EnxRtc.stopRecord();
+        });
+        $("#stopVideoTracksOnApplicationBackground").click(function () {
+          console.log('Uh oh... error stopVideoTracksOnApplicationBackground');
+          window.EnxRtc.stopVideoTracksOnApplicationBackground(true, true, function (data) {
+            console.log('Excelsior succuss! startDragging ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error startDragging ' + JSON.stringify(err));
+          });
+        });
+        $("#startVideoTracksOnApplicationForeground").click(function () {
+          console.log('Uh oh... error startVideoTracksOnApplicationForeground');
+          window.EnxRtc.startVideoTracksOnApplicationForeground(true, true, function (data) {
+            console.log('Excelsior succuss! startVideoTracksOnApplicationForeground ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error startVideoTracksOnApplicationForeground ' + JSON.stringify(err));
+          });
+        });
+
+        $("#enableStats").click(function () {
+          console.log('Uh oh... error hardUnMute');
+          window.EnxRtc.enableStats(true);
+        });
+        $("#disableStats").click(function () {
+          console.log('Uh oh... error hardUnMute');
+          window.EnxRtc.enableStats(false);
+        });
+        $("#switchUserRole").click(function () {
+          console.log('Uh oh... error hardUnMute');
+          window.EnxRtc.switchUserRole(clientid);
+        });
+
+        $("#makeOutboundCall").click(function () {
+          console.log('Uh oh... error hardUnMute');
+          window.EnxRtc.makeOutboundCall("918285200731");
+        });
+
+        $("#sendMessagePrivate").click(function () {
+          console.log('Uh oh... error hardUnMute');
+          window.EnxRtc.sendMessage("Shashank", false, [clientid]);
+        });
+        $("#sendMessageGroup").click(function () {
+          console.log('Uh oh... error hardUnMute');
+          window.EnxRtc.sendMessage("Shashank", true, []);
+        });
+
+        $("#sendUserData").click(function () {
+          console.log('Uh oh... error hardUnMute');
+          window.EnxRtc.sendUserData("Shashank", true, []);
+        });
+
+        $("#setAdvancedOptions").click(function () {
+          console.log('Uh oh... error hardUnMute');
+          window.EnxRtc.setAdvancedOptions([]);
+        });
+
+        $("#getAdvancedOptions").click(function () {
+          console.log('Uh oh... error hardUnMute');
+          window.EnxRtc.getAdvancedOptions();
+        });
+
+        $("#getClientId").click(function () {
+          window.EnxRtc.getClientId(function (data) {
+            console.log('Excelsior succuss! getClientId ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error getClientId ' + JSON.stringify(err));
+          });
+        });
+        $("#getRoomId").click(function () {
+          window.EnxRtc.getRoomId(function (data) {
+            console.log('Excelsior succuss! getRoomId ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error resizeLocalView ' + JSON.stringify(err));
+          });
+        });
+        $("#getClientName").click(function () {
+          window.EnxRtc.getClientName(function (data) {
+            console.log('Excelsior succuss! getClientName ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error getClientName ' + JSON.stringify(err));
+          });
+        });
+        $("#getLocalStreamID").click(function () {
+          window.EnxRtc.getLocalStreamID(function (data) {
+            console.log('Excelsior succuss! getClientName ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error getClientName ' + JSON.stringify(err));
+          });
+        });
+        $("#getUserList").click(function () {
+          window.EnxRtc.getUserList(function (data) {
+            console.log('Excelsior succuss! getClientName ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error getClientName ' + JSON.stringify(err));
+          });
+        });
+
+        $("#getRoomMetadata").click(function () {
+          window.EnxRtc.getRoomMetadata(function (data) {
+            console.log('Excelsior succuss! getClientName ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error getClientName ' + JSON.stringify(err));
+          });
+        });
+
+        $("#isConnected").click(function () {
+          window.EnxRtc.isConnected(function (data) {
+            console.log('Excelsior succuss! getClientName ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error getClientName ' + JSON.stringify(err));
+          });
+        });
+
+        $("#enableProximitySensor").click(function () {
+          window.EnxRtc.enableProximitySensor(true);
+        });
+        $("#getMode").click(function () {
+          window.EnxRtc.getMode(function (data) {
+            console.log('Excelsior succuss! getClientName ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error getClientName ' + JSON.stringify(err));
+          });
+        });
+        $("#getRole").click(function () {
+          window.EnxRtc.getRole(function (data) {
+            console.log('Excelsior succuss! getClientName ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error getClientName ' + JSON.stringify(err));
+          });
+        });
+        $("#whoAmI").click(function () {
+          window.EnxRtc.whoAmI(function (data) {
+            console.log('Excelsior succuss! getClientName ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error getClientName ' + JSON.stringify(err));
+          });
+        });
+        $("#sendFiles").click(function () {
+          window.EnxRtc.sendFiles(true, []);
+        });
+
+        $("#downloadFile").click(function () {
+          window.EnxRtc.downloadFile({}, true);
+        });
+
+        $("#getAvailableFiles").click(function () {
+          window.EnxRtc.getAvailableFiles(function (data) {
+            console.log('Excelsior succuss! getAvailableFiles ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error getClientName ' + JSON.stringify(err));
+          });
+        });
+        $("#StartAnnotation").click(function () {
+          window.EnxRtc.startAnnotation(clientid);
+        });
+        $("#StopAnnotation").click(function () {
+          window.EnxRtc.stopAnnotations();
+        });
+        function addScreenShare() {
+          console.log('Excelsior initRemoteView! ');
+          var clientHeight = document.getElementById('conferenceDiv').clientHeight;
+          var clientbottom = document.getElementById('div_videoButton').clientHeight;
+          var options = {
+            margin_top: clientHeight,
+            margin_bottom: clientbottom
+          };
+          window.EnxRtc.addScreenShare(options, function (data) {
+            console.log('Excelsior succuss! ' + JSON.stringify(data.data));
+            resizeRemoteViewSize()
+          }, function (err) {
+            console.log('Uh oh... error' + JSON.stringify(err));
+          });
+        }
+        function removeScreenShare() {
+          console.log('Excelsior initRemoteView! ');
+          window.EnxRtc.removeScreenShare(function (data) {
+            resizeRemoteViewtoFull()
+            console.log('Excelsior succuss! ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error' + JSON.stringify(err));
+          });
+        }
+        function addCanvasScreen() {
+          console.log('Excelsior initRemoteView! ');
+          var clientHeight = document.getElementById('conferenceDiv').clientHeight;
+          var clientbottom = document.getElementById('div_videoButton').clientHeight;
+          var options = {
+            margin_top: clientHeight,
+            margin_bottom: clientbottom
+          };
+          window.EnxRtc.addCanvasScreen(options, function (data) {
+            console.log('Excelsior succuss! ' + JSON.stringify(data.data));
+            resizeRemoteViewSize()
+          }, function (err) {
+            console.log('Uh oh... error' + JSON.stringify(err));
+          });
+        }
+        function removeCanvasScreen() {
+          console.log('Excelsior initRemoteView! ');
+          window.EnxRtc.removeCanvasScreen(function (data) {
+            resizeRemoteViewtoFull()
+            console.log('Excelsior succuss! ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error' + JSON.stringify(err));
+          });
+        }
+        function resizeRemoteViewtoFull(){
+          console.log('Excelsior resizeRemoteViewtoFull! ');
+          var clientHeight = document.getElementById('conferenceDiv').clientHeight;
+          var clintButtonHeight = document.getElementById('div_videoButton').clientHeight;
+          var resizeViewOptions = {
+                margin_top: clientHeight,
+                margin_bottom :clintButtonHeight
+              };
+              window.EnxRtc.resizeRemoteView(resizeViewOptions, function (data) {
+                console.log('Excelsior resizeRemoteViewtoFull! ');
+                console.log('Excelsior succuss! resizeViewOptions ' + JSON.stringify(data.data));
+              }, function (err) {
+                console.log('Uh oh.....error resizeRemoteViewtoFull! ');
+                console.log('Uh oh... error resizeViewOptions ' + JSON.stringify(err));
+              });
+        }
+        function resizeRemoteViewSize(){
+          var clientHeight = document.getElementById('conferenceDiv').clientHeight;
+        var clintButtonHeight = document.getElementById('div_videoButton').clientHeight;
+          var resizeViewOptions = {
+            height: 200,
+            width: 200,
+            margin_top: 0,
+            margin_left: 0,
+            margin_right: 150,
+            margin_bottom: clintButtonHeight + clientHeight,
+            position: "left"
+          };
+          window.EnxRtc.resizeRemoteView(resizeViewOptions, function (data) {
+            console.log('Excelsior succuss! resizeViewOptions ' + JSON.stringify(data.data));
+          }, function (err) {
+            console.log('Uh oh... error resizeViewOptions ' + JSON.stringify(err));
+          });
+        }
       }
     });
     //Init LocalView
     function initLocalView() {
       console.log('Excelsior initLocalView! ');
-      //var clientHeight = document.getElementById('conferenceDiv').clientHeight + 20;
+      var clientHeight = document.getElementById('conferenceDiv').clientHeight + 20;
       var initLocalViewOptions = {
         height: 130,
         width: 100,
-        margin_top: 50,
+        margin_top: clientHeight,
         margin_left: 0,
         margin_right: 15,
         margin_bottom: 10,
         position: "top"
       };
-      window.EnxCordovaPlugin.initLocalView(initLocalViewOptions, function (data) {
+      window.EnxRtc.initLocalView(initLocalViewOptions, function (data) {
         console.log('Local player Excelsior succuss! ' + JSON.stringify(data.data));
       }, function (err) {
         console.log('Uh oh... error' + JSON.stringify(err));
@@ -257,17 +509,166 @@ var app = {
     }
     function initRemoteView() {
       console.log('Excelsior initRemoteView! ');
-      //var clientHeight = document.getElementById('conferenceDiv').clientHeight;
-      var clientHeight = document.getElementById('div_videoButton').clientHeight;
+      var clientHeight = document.getElementById('conferenceDiv').clientHeight;
       console.log('Excelsior initRemoteView! ' + clientHeight);
+    var clintButtonHeight = document.getElementById('div_videoButton').clientHeight;
+
       var initRemoteViewOptions = {
-        margin_top: 22,
-        margin_bottom : (clientHeight - 22)
+        margin_top: clientHeight,
+        margin_bottom :clintButtonHeight
       };
-      window.EnxCordovaPlugin.initRemoteView(initRemoteViewOptions, function (data) {
+      window.EnxRtc.initRemoteView(initRemoteViewOptions, function (data) {
         console.log('Remore Player Excelsior succuss! ' + JSON.stringify(data.data));
+        window.EnxRtc.getDevices(function (data) {
+          console.log('Excelsior succuss! getDevices ' + JSON.stringify(data.data));
+        }, function (err) {
+          console.log('Uh oh... error resizeLocalView ' + JSON.stringify(err));
+        });
       }, function (err) {
         console.log('Uh oh... error' + JSON.stringify(err));
+      });
+    }
+
+    function initEventListner(){
+      window.EnxRtc.addEventListner("onRoomConnected", function (data) {
+        console.log('Excelsior succuss! resizeViewOptions ' + JSON.stringify(data.data));
+
+      });
+      window.EnxRtc.addEventListner("onRoomDisConnected", function (data) {
+        console.log('Excelsior succuss! onRoomDisConnected ' + JSON.stringify(data.data));
+        document.getElementById("joiningDiv").style.display = "block";
+        document.getElementById("div_videoButton").style.display = "none";
+        document.getElementById("conferenceDiv").style.display = "none";
+      });
+      window.EnxRtc.addEventListner("onAudioEvent", function (data) {
+        console.log('Excelsior succuss! onAudioEvent ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onVideoEvent", function (data) {
+        console.log('Excelsior succuss! onVideoEvent ' + JSON.stringify(data.data));
+        var x = data.data.msg;
+        if (x === "Video Off") {
+          document.getElementById("img_video").style.backgroundImage = "src('img/mute_video.png')";
+        }
+      });
+      window.EnxRtc.addEventListner("onEventError", function (data) {
+        console.log('Excelsior EventError! onEventError ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onNotifyDeviceUpdate", function (data) {
+        console.log('Excelsior Success! onNotifyDeviceUpdate ' + JSON.stringify(data.data));
+      });
+
+      window.EnxRtc.addEventListner("onUserConnected", function (data) {
+        console.log('Excelsior Success! onUserConnected ' + JSON.stringify(data.data));
+        clientid = data.data.clientId
+        console.log('Excelsior Success! clientid ' + clientid);
+      });
+
+      window.EnxRtc.addEventListner("onUserDisConnected", function (data) {
+        console.log('Excelsior Success! onUserDisConnected ' + JSON.stringify(data.data));
+      });
+
+
+      window.EnxRtc.addEventListner("onConferencessExtended", function (data) {
+        console.log('Excelsior Success! onConferencessExtended ' + JSON.stringify(data.data));
+      });
+
+      window.EnxRtc.addEventListner("onConferenceRemainingDuration", function (data) {
+        console.log('Excelsior Success! onConferenceRemainingDuration ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onAckLockRoom", function (data) {
+        console.log('Excelsior Success! onAckLockRoom ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onAckUnLockRoom", function (data) {
+        console.log('Excelsior Success! onAckUnLockRoom ' + JSON.stringify(data.data));
+      });
+
+      window.EnxRtc.addEventListner("onLockedRoom", function (data) {
+        console.log('Excelsior Success! onLockedRoom ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onUnLockedRoom", function (data) {
+        console.log('Excelsior Success! onUnLockedRoom ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onAckDropUser", function (data) {
+        console.log('Excelsior Success! onAckDropUser ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onAckDestroy", function (data) {
+        console.log('Excelsior Success! onAckDestroy ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onHardMuted", function (data) {
+        console.log('Excelsior Success! onHardMuted ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onReceivedHardMute", function (data) {
+        console.log('Excelsior Success! onReceivedHardMute ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onHardUnMuted", function (data) {
+        console.log('Excelsior Success! onHardUnMuted ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onReceivedHardUnMute", function (data) {
+        console.log('Excelsior Success! onReceivedHardUnMute ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onGetAdvancedOptions", function (data) {
+        console.log('Excelsior Success! onGetAdvancedOptions ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onAdvancedOptionsUpdate", function (data) {
+        console.log('Excelsior Success! onAdvancedOptionsUpdate ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onStartRecordingEvent", function (data) {
+        console.log('Excelsior Success! onStartRecordingEvent ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onRoomRecordingOn", function (data) {
+        console.log('Excelsior Success! onRoomRecordingOn ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onStopRecordingEvent", function (data) {
+        console.log('Excelsior Success! onStopRecordingEvent ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onRoomRecordingOff", function (data) {
+        console.log('Excelsior Success! onRoomRecordingOff ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onAcknowledgedSendData", function (data) {
+        console.log('Excelsior Success! onStopRecordingEvent ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onMessageReceived", function (data) {
+        console.log('Excelsior Success! onRoomRecordingOff ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onUserDataReceived", function (data) {
+        console.log('Excelsior Success! onRoomRecordingOff ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onSwitchedUserRole", function (data) {
+        console.log('Excelsior Success! onRoomRecordingOff ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onUserRoleChanged", function (data) {
+        console.log('Excelsior Success! onRoomRecordingOff ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onOutBoundCallInitiated", function (data) {
+        console.log('Excelsior Success! onRoomRecordingOff ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onDialStateEvents", function (data) {
+        console.log('Excelsior Success! onRoomRecordingOff ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onUserDataReceived", function (data) {
+        console.log('Excelsior Success! onRoomRecordingOff ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onScreenSharedStarted", function (data) {
+        console.log('Excelsior Success! onScreenSharedStarted ' + JSON.stringify(data.data));
+        addScreenShare();
+      });
+      window.EnxRtc.addEventListner("onScreenSharedStopped", function (data) {
+        console.log('Excelsior Success! onScreenSharedStopped ' + JSON.stringify(data.data));
+          removeScreenShare();
+      });
+      window.EnxRtc.addEventListner("onCanvasStarted", function (data) {
+        console.log('Excelsior Success! onCanvasStarted ' + JSON.stringify(data.data));
+        addCanvasScreen();
+      });
+      window.EnxRtc.addEventListner("onCanvasStopped", function (data) {
+        console.log('Excelsior Success! onCanvasStopped ' + JSON.stringify(data.data));
+          removeCanvasScreen();
+      });
+      window.EnxRtc.addEventListner("OnCapturedView", function (data) {
+        console.log('Excelsior Success! OnCapturedView ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onBandWidthUpdated", function (data) {
+        console.log('Excelsior Success! onBandWidthUpdated ' + JSON.stringify(data.data));
       });
     }
   },
