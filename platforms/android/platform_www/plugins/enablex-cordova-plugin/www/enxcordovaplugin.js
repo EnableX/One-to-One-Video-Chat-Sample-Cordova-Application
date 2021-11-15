@@ -2,7 +2,7 @@ cordova.define("enablex-cordova-plugin.enxcordovaplugin", function(require, expo
 
 var exec = require('cordova/exec');
 
-var PLUGIN_NAME = 'EnxCordovaPlugin';
+var PLUGIN_NAME = 'EnxRtc';
 
 var EnxCordovaPlugin = {
 
@@ -23,12 +23,12 @@ var EnxCordovaPlugin = {
    * @param {JSON} publishStreamInfo  publishStreamInfo for local streams
    * @param {JSON} roomInfo 
    */
-  joinRoom: function (token, publishStreamInfo, roomInfo) {
+  joinRoom: function (token, publishStreamInfo, roomInfo, successCallback, errorCallback) {
     var options = {};
     options.token = token;
     options.publishStreamInfo = publishStreamInfo;
     options.roomInfo = roomInfo;
-    exec(null, null, PLUGIN_NAME, 'joinRoom', [options]);
+    exec(successCallback, errorCallback, PLUGIN_NAME, 'joinRoom', [options]);
   },
 
   /**
@@ -561,9 +561,10 @@ var EnxCordovaPlugin = {
    * To make outbound call using client number.
    * @param {String} text use mobile number with std code.
    */
-  makeOutboundCall: function (text) {
+  makeOutboundCall: function (text,callid) {
     var options = {};
     options.text = text;
+    options.callerId = callid;
     exec(null, null, PLUGIN_NAME, 'makeOutboundCall', [options]);
   },
 
@@ -583,13 +584,13 @@ var EnxCordovaPlugin = {
 
   /**
    * To send custom chat message to the other clients.
-   * @param {String} text 
+   * @param {JSON} json 
    * @param {boolean} broadcast 
    * @param {Array} array 
    */
-  sendUserData: function (text, broadcast, array) {
+  sendUserData: function (json, broadcast, array) {
     var options = {};
-    options.text = text;
+    options.message = json;
     options.broadcast = broadcast;
     options.array = array;
     exec(null, null, PLUGIN_NAME, 'sendUserData', [options]);
@@ -757,8 +758,10 @@ var EnxCordovaPlugin = {
   /**
    * To eanble proximity sensor. true for enable and false for disable.
    * @param {boolean} status 
+   * @param {CallableFunction} successCallback 
+   * @param {CallableFunction} errorCallback
    */
-  enableProximitySensor: function (status) {
+  enableProximitySensor: function (status,successCallback, errorCallback) {
     var options = {};
     options.status = status;
     exec(successCallback, errorCallback, PLUGIN_NAME, 'enableProximitySensor', [options]);
@@ -794,16 +797,43 @@ var EnxCordovaPlugin = {
     exec(successCallback, errorCallback, PLUGIN_NAME, 'whoAmI', [options]);
   },
 
+  /**
+   * To start Annotation on given client ID
+   * @param {String} clientid 
+   */
   startAnnotation: function (clientid) {
     var options = {};
     options.clientId = clientid;
     exec(null, null, PLUGIN_NAME, 'startAnnotation', [options]);
   },
 
+  /**
+   * To stop Annotation.
+   */
   stopAnnotations: function () {
     var options = {};
     exec(null, null, PLUGIN_NAME, 'stopAnnotations', [options]);
   },
+
+  /**
+   * To pin user.
+   */
+  pinUsers: function (jsonArray) {
+    var options = {};
+    options.jsonArray = jsonArray;
+    exec(null, null, PLUGIN_NAME, 'pinUsers', [options]);
+  },
+
+
+  /**
+   * To unpin user.
+   */
+  unpinUsers: function (jsonArray) {
+    var options = {};
+    options.jsonArray = jsonArray;
+    exec(null, null, PLUGIN_NAME, 'unpinUsers', [options]);
+  },
+
   /**
   * Dumy Method.
   * @param nil

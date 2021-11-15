@@ -4,7 +4,7 @@
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
     </feature>
-    <feature name="EnxCordovaPlugin">
+    <feature name="EnxRtc">
         <param name="android-package" value="com.enablex.EnxCordovaPlugin" />
         <param name="onload" value="true" />
     </feature>
@@ -28,4 +28,5 @@
     <access origin="*" />
     <allow-intent href="market:*" />
     <preference name="loglevel" value="DEBUG" />
+    <preference name="AndroidXEnabled" value="true" />
 </widget>

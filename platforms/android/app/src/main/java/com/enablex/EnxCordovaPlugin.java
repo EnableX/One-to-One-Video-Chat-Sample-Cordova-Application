@@ -9,7 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -27,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +68,7 @@ import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 
 public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, EnxStreamObserver, EnxBandwidthObserver,
         EnxChairControlObserver, EnxLogsObserver, EnxMuteRoomObserver, EnxRecordingObserver, EnxMuteAudioStreamObserver,
@@ -127,6 +130,7 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) {
 
         if (action.equals("joinRoom")) {
+            mEventListeners.put(action, callbackContext);
             joinRoom(args);
         } else if (action.equals("initLocalView")) {
             mEventListeners.put(action, callbackContext);
@@ -197,6 +201,10 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
             postClientLogs(args);
         } else if (action.equals("enableLogs")) {
             enableLogs(args);
+        } else if (action.equals("pinUsers")) {
+            pinUsers(args);
+        } else if (action.equals("unpinUsers")) {
+            unpinUsers(args);
         } else if (action.equals("muteSubscribeStreamsAudio")) {
             mEventListeners.put(action, callbackContext);
             muteSubscribeStreamsAudio(args);
@@ -211,7 +219,7 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
             setReceiveVideoQuality(args);
         } else if (action.equals("adjustLayout")) {
             mEventListeners.put(action, callbackContext);
-            adjustLayout();
+            adjustLayout(args);
         } else if (action.equals("updateConfiguration")) {
             mEventListeners.put(action, callbackContext);
             updateConfiguration(args);
@@ -450,6 +458,18 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
             mEventListeners.put(action, callbackContext);
         } else if (action.equals("onReleasedFloorRequest")) {
             mEventListeners.put(action, callbackContext);
+        } else if (action.equals("onFloorCancelled")) {
+            mEventListeners.put(action, callbackContext);
+        } else if (action.equals("onFloorFinished")) {
+            mEventListeners.put(action, callbackContext);
+        } else if (action.equals("onCancelledFloorRequest")) {
+            mEventListeners.put(action, callbackContext);
+        } else if (action.equals("onFinishedFloorRequest")) {
+            mEventListeners.put(action, callbackContext);
+        } else if (action.equals("onStartScreenShareACK")) {
+            mEventListeners.put(action, callbackContext);
+        } else if (action.equals("onStoppedScreenShareACK")) {
+            mEventListeners.put(action, callbackContext);
         } else if (action.equals("onFileUploadStarted")) {
             mEventListeners.put(action, callbackContext);
         } else if (action.equals("onFileAvailable")) {
@@ -492,6 +512,18 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
             mEventListeners.put(action, callbackContext);
         } else if (action.equals("onStoppedCanvasAck")) {
             mEventListeners.put(action, callbackContext);
+        } else if (action.equals("onPublishedStream")) {
+            mEventListeners.put(action, callbackContext);
+        } else if (action.equals("onUnPublishedStream")) {
+            mEventListeners.put(action, callbackContext);
+        } else if (action.equals("onSubscribedStream")) {
+            mEventListeners.put(action, callbackContext);
+        } else if (action.equals("onAckPinUsers")) {
+            mEventListeners.put(action, callbackContext);
+        } else if (action.equals("onAckUnpinUsers")) {
+            mEventListeners.put(action, callbackContext);
+        } else if (action.equals("onPinnedUsers")) {
+            mEventListeners.put(action, callbackContext);
         }
         return true;
     }
@@ -507,7 +539,14 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
             publishStreamInfo = new JSONObject(publishStreamInfoString);
             roomInfo = new JSONObject(roomInfoString);
             roomInfo.put("activeviews","view");
-            roomInfo.getJSONObject("playerConfiguration").put("activeviews","view");
+
+            if(roomInfo.has("playerConfiguration")){
+                JSONObject playerConfig = roomInfo.getJSONObject("playerConfiguration");
+                if(playerConfig.has("iconColor")){
+                    String color = playerConfig.getString("iconColor");
+                    playerConfig.put("iconColor",Color.parseColor(color));
+                }
+            }
 
             boolean status = sharedPreferences.getBoolean("isEnxPluginPluginFirst", false);
             if (!status) {
@@ -523,7 +562,8 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
 
     private void joinCall() {
         mEnxRtc = new EnxRtc(cordova.getActivity(), this, this);
-        mLocalStream = mEnxRtc.joinRoom(token, publishStreamInfo, roomInfo, null);
+        mLocalStream = mEnxRtc.joinRoom(token, publishStreamInfo, roomInfo, new JSONArray());
+        triggerSuccussJSEvent("joinRoom","joinRoom","Joined Room called");
     }
 
     private void requestPermission() {
@@ -1257,7 +1297,15 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
     private void getDevices() {
         if (mEnxRoom != null) {
             List<String> deviceList = mEnxRoom.getDevices();
-            triggerSuccussJSEvent("getDevices", "getDevices", deviceList);
+            try{
+                JSONArray jsonArray = new JSONArray();
+                for (int i = 0; i < deviceList.size(); i++) {
+                    jsonArray.put(deviceList.get(i));
+                }
+                triggerSuccussJSEvent("getDevices", "getDevices", jsonArray);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         } else {
             reportErrorToJS("Object is not initialize : EnxRoom");
         }
@@ -1321,7 +1369,7 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
             if (mEnxRoom != null) {
                 JSONObject options = args.getJSONObject(0);
                 boolean audioOnly = options.getBoolean("audioOnly");
-                mEnxRoom.changeToAudioOnly(audioOnly);
+                mEnxRoom.setAudioOnlyMode(audioOnly);
                 // mEnxRoom.setAudioOnlyMode(audioOnly);
                 triggerSuccussJSEvent("setAudioOnlyMode", "setAudioOnlyMode", "Success");
             } else {
@@ -1362,18 +1410,61 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
         }
     }
 
-    private void adjustLayout() {
-        cordova.getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (mEnxRoom != null) {
-                    mEnxRoom.adjustLayout();
-                    triggerSuccussJSEvent("adjustLayout", "adjustLayout", "Success");
-                } else {
-                    reportErrorToJS("Object is not initialize : EnxRoom");
+    private void adjustLayout(JSONArray args) {
+
+        try{
+
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (mEnxRoom != null) {
+                            JSONObject jsonObject = args.getJSONObject(0);
+                            JSONObject options = new JSONObject(jsonObject.getString("adjustLayoutOptions"));
+
+                            int topMargin = (int) (options.optInt("margin_top") * scale + 0.5f);
+                            int leftMargin = (int) (options.optInt("margin_left") * scale + 0.5f);
+                            int rightMargin = (int) (options.optInt("margin_right") * scale + 0.5f);
+                            int bottomMargin = (int) (options.optInt("margin_bottom") * scale + 0.5f);
+
+                            int height = options.optInt("height");
+                            height = (int) (height * scale + 0.5f);
+                            if (height == 0) {
+                                height = mScreenHeight;
+                                height = height - (topMargin + bottomMargin);
+                            }
+
+                            if (height > mScreenHeight) {
+                                height = mScreenHeight;
+                                height = height - (topMargin + bottomMargin);
+                            }
+
+                            int width = options.optInt("width");
+                            width = (int) (width * scale + 0.5f);
+                            if (width == 0) {
+                                width = mScreenWidth;
+                                width = width - (leftMargin + rightMargin);
+                            }
+
+                            if (width > mScreenWidth) {
+                                width = mScreenWidth;
+                                width = width - (leftMargin + rightMargin);
+                            }
+
+                            mEnxRoom.adjustLayout(width,height);
+                            triggerSuccussJSEvent("adjustLayout", "adjustLayout", "Success");
+                        } else {
+                            reportErrorToJS("Object is not initialize : EnxRoom");
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void updateConfiguration(JSONArray args) {
@@ -1620,8 +1711,9 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
             if (mEnxRoom != null) {
                 JSONObject options = args.getJSONObject(0);
                 String number = options.getString("text");
+                String callerId = options.getString("callerId");
 
-                mEnxRoom.makeOutboundCall(number);
+                mEnxRoom.makeOutboundCall(number,callerId);
             } else {
                 reportErrorToJS("Object is not initialize : EnxRoom");
             }
@@ -1873,8 +1965,8 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
                 JSONObject options = args.getJSONObject(0);
                 boolean status = options.getBoolean("status");
 
-                // mEnxRoom.enableProximitySensor(status);
-                // triggerSuccussJSEvent("enableProximitySensor","enableProximitySensor",status);
+                mEnxRoom.enableProximitySensor(status);
+                triggerSuccussJSEvent("enableProximitySensor","enableProximitySensor",status);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1935,6 +2027,58 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
             EnxUtilityManager enxLogsUtil = EnxUtilityManager.getInstance();
             enxLogsUtil.enableLogs(enable);
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void pinUsers(JSONArray args){
+        try {
+            if (mEnxRoom != null) {
+                JSONObject options = args.getJSONObject(0);
+                JSONArray jsonArray = options.getJSONArray("jsonArray");
+
+                List<String> list = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    String clientId = jsonArray.getString(i);
+                    list.add(clientId);
+                }
+
+                if (mEnxRoom != null) {
+                    mEnxRoom.pinUsers(list);
+                } else {
+                    reportErrorToJS("Object is not initialize : EnxRoom");
+                }
+
+            } else {
+                reportErrorToJS("Object is not initialize : EnxRoom");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void unpinUsers(JSONArray args){
+        try {
+            if (mEnxRoom != null) {
+                JSONObject options = args.getJSONObject(0);
+                JSONArray jsonArray = options.getJSONArray("jsonArray");
+
+                List<String> list = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    String clientId = jsonArray.getString(i);
+                    list.add(clientId);
+                }
+
+                if (mEnxRoom != null) {
+                    mEnxRoom.unpinUsers(list);
+                } else {
+                    reportErrorToJS("Object is not initialize : EnxRoom");
+                }
+
+            } else {
+                reportErrorToJS("Object is not initialize : EnxRoom");
+            }
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -2089,10 +2233,8 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
         releaseAllResources();
     }
 
-    @Override
-    public void onActiveTalkerList(JSONObject jsonObject) {
 
-    }
+
 
     @Override
     public void onActiveTalkerList(RecyclerView recyclerView) {
@@ -2113,7 +2255,7 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
                         @Override
                         public void run() {
                             if (mEnxRoom != null) {
-                                mEnxRoom.adjustLayout();
+                                mEnxRoom.adjustLayout(mScreenWidth,mScreenHeight);
                                 mLocalView.bringToFront();
                             }
                         }
@@ -2215,7 +2357,17 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
 
     @Override
     public void OnCapturedView(Bitmap bitmap) {
+        try{
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
 
+            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+            triggerSuccussJSEvent("OnCapturedView","OnCapturedView",encoded);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -2429,6 +2581,11 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
     }
 
     @Override
+    public void onDTMFCollected(String s) {
+
+    }
+
+    @Override
     public void onPlayerStats(JSONObject jsonObject) {
         triggerSuccussJSEvent("onPlayerStats", "onPlayerStats", jsonObject);
     }
@@ -2489,11 +2646,6 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
     }
 
     @Override
-    public void onCanvasStarted(JSONObject jsonObject) {
-
-    }
-
-    @Override
     public void onCanvasStarted(EnxStream enxStream) {
         canvasShared = true;
         this.canvasShareStream = enxStream;
@@ -2501,24 +2653,9 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
     }
 
     @Override
-    public void onCanvasStopped(JSONObject jsonObject) {
-
-    }
-
-    @Override
     public void onCanvasStopped(EnxStream enxStream) {
         canvasShared = false;
         triggerSuccussJSEvent("onCanvasStopped", "onCanvasStopped", "Canvas stopped");
-    }
-
-    @Override
-    public void onScreenSharedStarted(JSONObject jsonObject) {
-
-    }
-
-    @Override
-    public void onScreenSharedStopped(JSONObject jsonObject) {
-
     }
 
     @Override
@@ -2572,6 +2709,117 @@ public class EnxCordovaPlugin extends CordovaPlugin implements EnxRoomObserver, 
     @Override
     public void onAckDestroy(JSONObject jsonObject) {
         triggerSuccussJSEvent("onAckDestroy", "onAckDestroy", jsonObject);
+    }
+
+    @Override
+    public void onFloorCancelled(JSONObject jsonObject) {
+        triggerSuccussJSEvent("onFloorCancelled", "onFloorCancelled", jsonObject);
+    }
+
+    @Override
+    public void onFloorFinished(JSONObject jsonObject) {
+        triggerSuccussJSEvent("onFloorFinished", "onFloorFinished", jsonObject);
+    }
+
+    @Override
+    public void onCancelledFloorRequest(JSONObject jsonObject) {
+        triggerSuccussJSEvent("onCancelledFloorRequest", "onCancelledFloorRequest", jsonObject);
+    }
+
+    @Override
+    public void onFinishedFloorRequest(JSONObject jsonObject) {
+        triggerSuccussJSEvent("onFinishedFloorRequest", "onFinishedFloorRequest", jsonObject);
+    }
+
+    @Override
+    public void onACKInviteToFloorRequested(JSONObject jsonObject) {
+        
+    }
+
+    @Override
+    public void onInviteToFloorRequested(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onInvitedForFloorAccess(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onCanceledFloorInvite(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onRejectedInviteFloor(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onAcceptedFloorInvite(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onStartScreenShareACK(JSONObject jsonObject) {
+        triggerSuccussJSEvent("onStartScreenShareACK", "onStartScreenShareACK", jsonObject);
+    }
+
+    @Override
+    public void onStoppedScreenShareACK(JSONObject jsonObject) {
+        triggerSuccussJSEvent("onStoppedScreenShareACK", "onStoppedScreenShareACK", jsonObject);
+    }
+
+    @Override
+    public void onAckPinUsers(JSONObject jsonObject) {
+        triggerSuccussJSEvent("onAckPinUsers", "onAckPinUsers", jsonObject);
+    }
+
+    @Override
+    public void onAckUnpinUsers(JSONObject jsonObject) {
+        triggerSuccussJSEvent("onAckUnpinUsers", "onAckUnpinUsers", jsonObject);
+    }
+
+    @Override
+    public void onPinnedUsers(JSONObject jsonObject) {
+        triggerSuccussJSEvent("onPinnedUsers", "onPinnedUsers", jsonObject);
+    }
+    @Override
+    public void onRoomAwaited(EnxRoom enxRoom, JSONObject jsonObject) {
+        
+        }
+    @Override
+    public void onUserAwaited(JSONObject jsonObject) {
+        
+    }
+    @Override
+    public void onAckForApproveAwaitedUser(JSONObject jsonObject) {
+       
+    }
+    @Override
+    public void onAckForDenyAwaitedUser(JSONObject jsonObject) {
+        
+    }
+
+    @Override
+    public void onAckAddSpotlightUsers(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onAckRemoveSpotlightUsers(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onUpdateSpotlightUsers(JSONObject jsonObject) {
+
+    }
+
+    @Override
+    public void onRoomBandwidthAlert(JSONObject jsonObject) {
+
     }
 
     private class OnDragTouchListener implements View.OnTouchListener {
