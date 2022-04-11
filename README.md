@@ -1,24 +1,24 @@
 ## 1. How to get started
 
-### 1.1 Pre-Requisites
+### 1.1 Prerequisites
 
 #### 1.1.1 App Id and App Key 
 
 * Register with EnableX [https://www.enablex.io] 
 * Create your Application
-* Get your App ID and App Key delivered to your Email
+* Get your App ID and App Key delivered to your email
 
 
 #### 1.1.2 Sample Cordova Application 
 
-* Clone or download this Repository [https://github.com/EnableX/One-to-One-Video-Chat-Sample-Cordova-Application.git] 
+* [Clone or download this Repository](https://github.com/EnableX/One-to-One-Video-Chat-Sample-Cordova-Application.git)
 
 
 #### 1.1.3 Sample App Server 
 
-* Clone or download this Repository [https://github.com/EnableX/Sample-Web-App-1to1-RTC.git] & follow the steps further 
+* [Clone or download this Repository](https://github.com/EnableX/Sample-Web-App-1to1-RTC.git) & follow the steps further 
 * You need to use App ID and App Key to run this Service. 
-* Your Cordova Sample Application Client End Point needs to connect to this Service to create Virtual Room.
+* Your Cordova Sample Application Client EndPoint needs to connect to this Service to create Virtual Room.
 * Follow README file of this Repository to setup the Service.
 
 #### 1.1.4 Configure Cordova Sample Client 
@@ -45,7 +45,7 @@
     
     `cordova plugin add enablex-cordova-plugin@latest`
 
-#### 1.1.6 How to setup cordova plugin Android/iOS
+#### 1.1.6 How to set up cordova plugin Android/IOS
 
 ### Android
     
@@ -96,13 +96,13 @@ After adding Cordova Enablex plugin
                exclude("META-INF/*.kotlin_module")  
              } 
 
-### iOS
+### IOS
     
         After adding Cordova Enablex plugin please add ios project as below command
         
         cordova platform add ios
         
-        It will install all dependency enableX library through Pod. After that go to your iOS project folder and open your xcode , setup your certificate and then build the app either command line or through xcode. 
+        It will install all dependency enableX library through Pod. After that go to your iOS project folder and open your xcode , set up your certificate and then build the app either command line or through xcode. 
     
     
 #### 1.1.7 To remove Enalex Cordova plugin
@@ -115,7 +115,7 @@ After adding Cordova Enablex plugin
 
 ### 1.2 Walkthrough Cordova Sample Application 
 
-#### 1.2.1 Pre-Requisites:
+#### 1.2.1 Prerequisites:
 
 Make sure You have Cordova 3.5.0 or greater installed. If you haven't, take a look at the [Cordova instructions](http://cordova.apache.org/docs/en/3.5.0/guide_cli_index.md.html) Page.
 
