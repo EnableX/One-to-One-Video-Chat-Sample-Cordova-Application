@@ -561,12 +561,13 @@ var EnxCordovaPlugin = {
    * To make outbound call using client number.
    * @param {String} text use mobile number with std code.
    */
-  makeOutboundCall: function (text,callid) {
+   makeOutboundCall: function (number,callid,dialOptions) {
     var options = {};
-    options.text = text;
+    options.number = number;
     options.callerId = callid;
+    options.dialOptions = dialOptions;
     exec(null, null, PLUGIN_NAME, 'makeOutboundCall', [options]);
-  },
+    },
 
   /**
    * To send chat message to the other clients.
@@ -833,7 +834,109 @@ var EnxCordovaPlugin = {
     options.jsonArray = jsonArray;
     exec(null, null, PLUGIN_NAME, 'unpinUsers', [options]);
   },
+   /**
+   * To capture screen shot.
+   * * @param {String} streamId 
+   */
+    captureScreenShot: function (streamId) {
+      var options = {};
+      options.streamId = streamId;
+      exec(null, null, PLUGIN_NAME, 'captureScreenShot', [options]);
+    },
+  /**
+   * To AddspotLisht user.
+   */
+   addSpotlightUsers: function (clientIds) {
+    var options = {};
+    options.clientIds = clientIds;
+    exec(null, null, PLUGIN_NAME, 'addSpotlightUsers', [options]);
+  },
 
+
+  
+
+  /**
+   * To removespotLisht user.
+   */
+   removeSpotlightUsers: function (clientIds) {
+    var options = {};
+    options.clientIds = clientIds;
+    exec(null, null, PLUGIN_NAME, 'removeSpotlightUsers', [options]);
+  },
+
+   /**
+   * To subscribeForTalkerNotification .
+   *    * @param {boolean} isTalkerNofitication 
+   */
+
+    subscribeForTalkerNotification :function(isTalkerNofitication){
+      var options = {};
+      options.isTalkerNofitication = isTalkerNofitication;
+      exec(null, null, PLUGIN_NAME, 'subscribeForTalkerNotification', [options]);
+    },
+
+
+/**
+   * To Precalltest .
+   *  * @param {JSON} precallJson 
+   */
+
+//   clientDiagnostics :function(precallJson){
+//   var options = {};
+//   options.precallJson = precallJson;
+//   exec(null, null, PLUGIN_NAME, 'clientDiagnostics', [options]);
+// },  
+//inviteToFloor,cancelFloorInvite,rejectInviteFloor,acceptInviteFloorRequest
+  /**
+   * To inviteToFloor
+   * @param {String} clientid 
+   */
+   inviteToFloor: function (clientid) {
+    var options = {};
+    options.clientId = clientid;
+    exec(null, null, PLUGIN_NAME, 'inviteToFloor', [options]);
+  },
+ /**
+   * To cancelFloorInvite
+   * @param {String} clientid 
+   */
+  cancelFloorInvite: function (clientid) {
+    var options = {};
+    options.clientId = clientid;
+    exec(null, null, PLUGIN_NAME, 'cancelFloorInvite', [options]);
+  },
+   /**
+   * To cancelFloorInvite
+   * @param {String} clientid 
+   */
+    rejectInviteFloor: function (clientid) {
+      var options = {};
+      options.clientId = clientid;
+      exec(null, null, PLUGIN_NAME, 'rejectInviteFloor', [options]);
+    },
+
+    /**
+   * To acceptInviteFloorRequest
+   * @param {String} clientid 
+   */
+     acceptInviteFloorRequest: function (clientid) {
+      var options = {};
+      options.clientId = clientid;
+      exec(null, null, PLUGIN_NAME, 'acceptInviteFloorRequest', [options]);
+    },
+
+     /**
+   * To switch room mode
+   * @param {String} roomMode 
+   */
+      switchRoomMode: function (roomMode) {
+        var options = {};
+        options.roomMode = roomMode;
+        exec(null, null, PLUGIN_NAME, 'switchRoomMode', [options]);
+      },
+      
+      
+    
   /**
   * Dumy Method.
   * @param nil

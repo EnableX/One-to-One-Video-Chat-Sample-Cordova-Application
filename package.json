@@ -13,16 +13,14 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "dependencies": {
-    "cordova-android": "^8.1.0",
-    "cordova-ios": "^5.1.1",
-    "enablex-cordova-plugin": "^1.9.9"
+    "cordova-ios": "^5.1.1"
   },
   "devDependencies": {
-    "cordova-plugin-whitelist": "^1.3.4"
+    "cordova-android": "^11.0.0",
+    "enablex-cordova-plugin": "^1.9.9"
   },
   "cordova": {
     "plugins": {
-      "cordova-plugin-whitelist": {},
       "enablex-cordova-plugin": {}
     },
     "platforms": [

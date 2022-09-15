@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /*
        Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements.  See the NOTICE file
@@ -19,9 +17,22 @@
        under the License.
 */
 
-const android_sdk = require('cordova-android/lib/android_sdk');
+package org.apache.cordova;
 
-android_sdk.print_newest_available_sdk_target().catch(err => {
-    console.error(err);
-    process.exit(2);
-});
+import androidx.webkit.WebViewAssetLoader;
+
+/**
+ * Wrapper class for path and handler
+ */
+public class CordovaPluginPathHandler {
+
+    private final WebViewAssetLoader.PathHandler handler;
+
+    public  CordovaPluginPathHandler(WebViewAssetLoader.PathHandler handler) {
+        this.handler = handler;
+    }
+
+    public WebViewAssetLoader.PathHandler getPathHandler() {
+        return handler;
+    }
+}

@@ -28,8 +28,8 @@ var kBasedURL = "https://demo.enablex.io/";
 /*The following information required, Only when kTry = true, When you hosted your own webservice remove these fileds*/
 
 /*Use enablec portal to create your app and get these following credentials*/
-var kAppId    = "";
-var kAppkey   = "";
+var kAppId    = "5ef5b31690ef80b4300b0bd2";
+var kAppkey   = "uJehyWaAu4uvyTupeJyJuHu6ygyYaGu2yzuq";
      
 $("#joinButton").click(function () {
      
@@ -70,7 +70,7 @@ $("#joinButton").click(function () {
           audioMuted: false,
           videoMuted: false,
           maxVideoLayers: 1,
-          name: "Shashank"
+          name: "Demo App"
         };
         var playerConfiguration = {
           audiomute: true,
@@ -108,10 +108,26 @@ $("#joinButton").click(function () {
         });
         $("#muteAudio").click(function () {
           window.EnxRtc.muteSelfAudio(true);
+
+         // window.EnxRtc.addSpotlightUsers([clientid]);
+        //  var dialOptions = {
+
+        //   name: "Pankaj",
+          
+        //   early_media: true,
+          
+        //   };
+          
+        //  window.EnxRtc.makeOutboundCall("918574230260","12028528186",dialOptions);
+        //  console.log('Excelsior succuss!  pstncall ' + JSON.stringify(data.data));
+       
         });
 
         $("#muteVideo").click(function () {
-          window.EnxRtc.muteSelfVideo(true);
+          window.EnxRtc.muteSelfAudio(false);
+
+         // window.EnxRtc.muteSelfVideo(true);
+         // window.EnxRtc.removeSpotlightUsers([clientid]);
         });
 
         $("#unmuteAudio").click(function () {
@@ -692,13 +708,13 @@ function setRoomID(room_id){
         console.log('Excelsior Success! onRoomRecordingOff ' + JSON.stringify(data.data));
       });
       window.EnxRtc.addEventListner("onOutBoundCallInitiated", function (data) {
-        console.log('Excelsior Success! onRoomRecordingOff ' + JSON.stringify(data.data));
+        console.log('Excelsior Success! onOutBoundCallInitiated ' + JSON.stringify(data.data));
       });
       window.EnxRtc.addEventListner("onDialStateEvents", function (data) {
-        console.log('Excelsior Success! onRoomRecordingOff ' + JSON.stringify(data.data));
+        console.log('Excelsior Success! onDialStateEvents ' + JSON.stringify(data.data));
       });
       window.EnxRtc.addEventListner("onUserDataReceived", function (data) {
-        console.log('Excelsior Success! onRoomRecordingOff ' + JSON.stringify(data.data));
+        console.log('Excelsior Success! onUserDataReceived ' + JSON.stringify(data.data));
       });
       window.EnxRtc.addEventListner("onScreenSharedStarted", function (data) {
         console.log('Excelsior Success! onScreenSharedStarted ' + JSON.stringify(data.data));
@@ -721,6 +737,15 @@ function setRoomID(room_id){
       });
       window.EnxRtc.addEventListner("onBandWidthUpdated", function (data) {
         console.log('Excelsior Success! onBandWidthUpdated ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onAckAddSpotlightUsers", function (data) {
+        console.log('Excelsior Success! onAckAddSpotlightUsers ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onAckRemoveSpotlightUsers", function (data) {
+        console.log('Excelsior Success! onAckRemoveSpotlightUsers ' + JSON.stringify(data.data));
+      });
+      window.EnxRtc.addEventListner("onUpdateSpotlightUsers", function (data) {
+        console.log('Excelsior Success! onUpdateSpotlightUsers ' + JSON.stringify(data.data));
       });
     }
   },
