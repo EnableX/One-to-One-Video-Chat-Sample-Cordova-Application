@@ -569,6 +569,17 @@ var EnxCordovaPlugin = {
     exec(null, null, PLUGIN_NAME, 'makeOutboundCall', [options]);
     },
 
+    /** To cancel Outbound call using phone number
+     * @param {String} text use mobile number with std code
+     */
+    cancelOutboundCall :function(number){
+      var options = {};
+      options.number=number;
+      exec(null,null,PLUGIN_NAME,"cancelOutboundCall",[options])
+
+
+    },
+
   /**
    * To send chat message to the other clients.
    * @param {String} text 
@@ -935,8 +946,105 @@ var EnxCordovaPlugin = {
         exec(null, null, PLUGIN_NAME, 'switchRoomMode', [options]);
       },
       
-      
+
+      /**
+       *Override Single Mute/Unmute Audio room level 
+       *@param{String} clientId
+
+       */
+
+       hardMuteUserAudio:function(clientId){
+        var options = {};
+        options.clientId = clientId;
+        exec(null, null, PLUGIN_NAME, 'hardMuteUserAudio', [options]);
+
+       },
+
+        /**
+       *Override Single Unmute Audio room level 
+       *@param{String} clientId
+
+       */
+
+       hardUnmuteUserAudio:function(clientId){
+        var options = {};
+        options.clientId = clientId;
+        exec(null, null, PLUGIN_NAME, 'hardUnmuteUserAudio', [options]);
+
+       },
+       
+    /**
+     * Override Single Mute Video 
+     * @param {String} clientId
+     */
+
+     hardMuteUserVideo:function(clientId){
+      var options = {};
+      options.clientId = clientId;
+      exec(null, null, PLUGIN_NAME, 'hardMuteUserVideo', [options]);
+
+     },
+
+      /**
+     * Override Single unMute Video 
+     * @param {String} clientId
+     */
+
     
+     hardUnmuteUserVideo:function(clientId){
+      var options = {};
+      options.clientId = clientId;
+      exec(null, null, PLUGIN_NAME, 'hardUnmuteUserVideo', [options]);
+
+     },
+
+
+     /**
+      * Highlight the enxplayer border color 
+      */
+      highlightBorderForClient:function(clientIds){
+        var options = {};
+        options.clientIds = clientIds;
+        exec(null, null, PLUGIN_NAME, 'highlightBorderForClient', [options]);
+  
+      },
+      
+      /**
+       * Change Background color for the EnxPlayerView changeBgColorForClients
+       */
+
+       changeBgColorForClients:function(clientIds,color){
+        var options = {};
+        options.clientIds = clientIds;
+        options.color=color;
+        exec(null, null, PLUGIN_NAME, 'changeBgColorForClients', [options]);
+  
+      },
+
+       /**
+   * To Speech to Text(Livetranscription).
+   * Start LiveTranscriptions
+   */
+  subscribeForLiveTranscription: function (enable) {
+    var options = {};
+    options.enable = enable;
+
+    exec(null, null, PLUGIN_NAME, 'subscribeForLiveTranscription', [options]);
+  },
+  startLiveTranscriptionForRoom: function (language) {
+    var options = {};
+    options.language = language;
+
+    exec(null, null, PLUGIN_NAME, 'startLiveTranscriptionForRoom', [options]);
+  },
+
+   stopLiveTranscription: function () {
+    var options = {};
+    exec(null, null, PLUGIN_NAME, 'stopLiveTranscription', [options]);
+  },
+    
+    
+
   /**
   * Dumy Method.
   * @param nil

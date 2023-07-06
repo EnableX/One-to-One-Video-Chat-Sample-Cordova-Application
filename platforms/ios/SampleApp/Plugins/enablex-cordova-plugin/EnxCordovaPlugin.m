@@ -12,6 +12,10 @@
     float scale;
     UIView * parentView;
     UIView *mRemoteView;
+    UIView *mOptionView;
+    EnxStream *mOptionStream;
+    EnxPlayerView *mOptionPlayer;
+
     CGFloat firstX;
     CGFloat firstY;
     NSString *roomMode;
@@ -190,6 +194,11 @@
 }
 -(void)onDialStateEvents:(CDVInvokedUrlCommand*)command{
     [eventListional setObject:command.callbackId forKey:@"onDialStateEvents"];
+}-(void)onDTMFCollected:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onDTMFCollected"];
+}-(void)onOutBoundCallCancel:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onOutBoundCallCancel"];
+
 }
 -(void)onPlayerStats:(CDVInvokedUrlCommand*)command{
     [eventListional setObject:command.callbackId forKey:@"onPlayerStats"];
@@ -297,6 +306,9 @@
 -(void)onUserDataReceived:(CDVInvokedUrlCommand*)command{
     [eventListional setObject:command.callbackId forKey:@"onUserDataReceived"];
 }
+-(void)onRoomBandwidthAlert:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onRoomBandwidthAlert"];
+}
 #pragma -mark CC Callback
 -(void)onFloorRequested:(CDVInvokedUrlCommand*)command{
     [eventListional setObject:command.callbackId forKey:@"onFloorRequested"];
@@ -329,6 +341,156 @@
    [eventListional setObject:command.callbackId forKey:@"onFinishedFloorRequest"];
 }
 
+///
+-(void)onACKInviteToFloorRequested:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onACKInviteToFloorRequested"];
+}
+-(void)onInviteToFloorRequested:(CDVInvokedUrlCommand*)command{
+   [eventListional setObject:command.callbackId forKey:@"onInviteToFloorRequested"];
+}
+
+-(void)onInvitedForFloorAccess:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onInvitedForFloorAccess"];
+}
+-(void)onCanceledFloorInvite:(CDVInvokedUrlCommand*)command{
+   [eventListional setObject:command.callbackId forKey:@"onCanceledFloorInvite"];
+}
+-(void)onRejectedInviteFloor:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onRejectedInviteFloor"];
+}
+-(void)onAcceptedFloorInvite:(CDVInvokedUrlCommand*)command{
+   [eventListional setObject:command.callbackId forKey:@"onAcceptedFloorInvite"];
+}
+#pragma -mark pin/unpin Callback
+-(void)onAckPinUsers:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onAckPinUsers"];
+}
+-(void)onAckUnpinUsers:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onAckUnpinUsers"];
+}
+-(void)onPinnedUsers:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onPinnedUsers"];
+}
+
+#pragma -mark spotlight Callback
+-(void)onAckAddSpotlightUsers:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onAckAddSpotlightUsers"];
+}
+-(void)onAckRemoveSpotlightUsers:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onAckRemoveSpotlightUsers"];
+}
+-(void)onUpdateSpotlightUsers:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onUpdateSpotlightUsers"];
+}
+
+#pragma -Audio Energy Callback
+-(void)onAckSubscribeTalkerNotification:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onAckSubscribeTalkerNotification"];
+}
+-(void)onAckUnsubscribeTalkerNotification:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onAckUnsubscribeTalkerNotification"];
+}
+-(void)onTalkerNtification:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onTalkerNtification"];
+}
+#pragma -mark switched Room Callback
+-(void)onAckSwitchedRoom:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onAckSwitchedRoom"];
+}
+-(void)onRoomModeSwitched:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onRoomModeSwitched"];
+}
+//
+-(void)onAckHardMuteUserAudio:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onAckHardMuteUserAudio"];
+}
+-(void)onAckHardunMuteUserAudio:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onAckHardunMuteUserAudio"];
+}
+
+-(void)onAckHardMuteUserVideo:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onAckHardMuteUserVideo"];
+}
+
+-(void)onAckHardUnMuteUserVideo:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onAckHardUnMuteUserVideo"];
+}
+
+//
+-(void)onACKStartLiveTranscription:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onACKStartLiveTranscription"];
+}
+
+-(void)onACKStopLiveTranscription:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onACKStopLiveTranscription"];
+}
+-(void)onACKSubscribeForLiveTranscription:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onACKSubscribeForLiveTranscription"];
+}
+
+-(void)onTranscriptionEvents:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onTranscriptionEvents"];
+}
+//
+-(void)onRoomTranscriptionOn:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onRoomTranscriptionOn"];
+}
+
+-(void)onRoomTranscriptionOff:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onRoomTranscriptionOff"];
+}
+
+-(void)onSelfTranscriptionOn:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onSelfTranscriptionOn"];
+}
+
+-(void)onSelfTranscriptionOff:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onSelfTranscriptionOff"];
+}
+
+#pragma hls
+
+-(void)onHlsStarted:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onHlsStarted"];
+}
+
+-(void)onHlsStopped:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onHlsStopped"];
+}
+
+-(void)onHlsFailed:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onHlsFailed"];
+}
+
+-(void)onHlsWaiting:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onHlsWaiting"];
+}
+
+
+
+#pragma -mark Precall Test Callback
+/*-(void)onClientDiagnosisFailed:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onClientDiagnosisFailed"];
+}
+-(void)onClientDiagnosisStopped:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onClientDiagnosisStopped"];
+}
+-(void)onClientDiagnosisFinished:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onClientDiagnosisFinished"];
+}
+-(void)onClientDiagnosisStatus:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onClientDiagnosisStatus"];
+}
+-(void)onClientBitrateStatus:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onClientBitrateStatus"];
+}
+-(void)onClientBitrateFinished:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onClientBitrateFinished"];
+}
+-(void)onClientBitrateFailed:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"onClientBitrateFailed"];
+}*/
+
 //Check For obj Refrence
 -(void)checkForObjectRef{
     if(mEnxRtc == nil){
@@ -339,14 +501,17 @@
         eventListional = [[NSMutableDictionary alloc]initWithCapacity:0];
     }
 }
-
 ///Join Room Events
--(void)joinRoom:(CDVInvokedUrlCommand*)command{
-    [self checkForObjectRef];
-  NSDictionary* phrase = [command.arguments objectAtIndex:0];
-    mLocalStream = [mEnxRtc joinRoom:phrase[@"token"] delegate:self PublishStreamInfo:phrase[@"publishStreamInfo"] roomInfo:phrase[@"roomInfo"] advanceOptions:nil];
+    -(void)joinRoom:(CDVInvokedUrlCommand*)command{
+        [self checkForObjectRef];
+        [eventListional setObject:command.callbackId forKey:@"joinRoom"];
+        NSDictionary* phrase = [command.arguments objectAtIndex:0];
+        NSMutableDictionary *roomDict = [phrase[@"roomInfo"] mutableCopy];
+        [roomDict setObject:@"view" forKey:@"activeviews"];
+         mLocalStream = [mEnxRtc joinRoom:phrase[@"token"] delegate:self PublishStreamInfo:phrase[@"publishStreamInfo"] roomInfo:roomDict advanceOptions:nil];
         mLocalStream.delegate = self;
-}
+        [self triggerSuccussJSEvent:@"joinRoom" actionName:@"joinRoom" requestData:@"Joined Room called Success"];
+    }
 
 //Create LocalView
 -(void)initLocalView:(CDVInvokedUrlCommand*)command{
@@ -500,60 +665,77 @@
     if([position isEqualToString:@"right"] ){
               [mRemoteView.topAnchor constraintEqualToAnchor:parentView.topAnchor constant:topMargin].active = true;
               [mRemoteView.trailingAnchor constraintEqualToAnchor:parentView.trailingAnchor constant:-(rightMargin)].active = true;
-            leftMargin = parentView.bounds.size.width - width;
+                if(leftMargin == 0){
+                    leftMargin = parentView.bounds.size.width - width;
+                }
             [mRemoteView.leadingAnchor constraintEqualToAnchor:parentView.leadingAnchor constant:leftMargin].active = true;
-            bottomMargin = parentView.bounds.size.height - height;
+            if(bottomMargin == 0){
+                bottomMargin = parentView.bounds.size.height - height;
+            }
         [mRemoteView.bottomAnchor constraintEqualToAnchor:parentView.bottomAnchor constant:-(bottomMargin)].active = true;
           }
           else if([position isEqualToString:@"left"] ){
               [mRemoteView.topAnchor constraintEqualToAnchor:parentView.topAnchor constant:topMargin].active = true;
               [mRemoteView.leadingAnchor constraintEqualToAnchor:parentView.leadingAnchor constant:leftMargin].active = true;
-              bottomMargin = parentView.bounds.size.height - height;
+              if(bottomMargin == 0){
+                  bottomMargin = parentView.bounds.size.height - height;
+              }
               [mRemoteView.bottomAnchor constraintEqualToAnchor:parentView.bottomAnchor constant:-(bottomMargin)].active = true;
-              rightMargin = parentView.bounds.size.width - width;
+              if(rightMargin == 0){
+                  rightMargin = parentView.bounds.size.width - width;
+              }
               [mRemoteView.trailingAnchor constraintEqualToAnchor:parentView.trailingAnchor constant:-(rightMargin)].active = true;
           }
           else if([position isEqualToString:@"top"] ){
               [mRemoteView.topAnchor constraintEqualToAnchor:parentView.topAnchor constant:topMargin].active = true;
               [mRemoteView.trailingAnchor constraintEqualToAnchor:parentView.trailingAnchor constant:-(rightMargin)].active = true;
-              bottomMargin = parentView.bounds.size.height - height;
+              if(bottomMargin == 0){
+                  bottomMargin = parentView.bounds.size.height - height;
+              }
               [mRemoteView.bottomAnchor constraintEqualToAnchor:parentView.bottomAnchor constant:-(bottomMargin)].active = true;
-              leftMargin = parentView.bounds.size.width - width;
+              if(leftMargin == 0){
+                  leftMargin = parentView.bounds.size.width - width;
+              }
               [mRemoteView.leadingAnchor constraintEqualToAnchor:parentView.leadingAnchor constant:leftMargin].active = true;
           }
           else if([position isEqualToString:@"bottom"] ){
               [mRemoteView.bottomAnchor constraintEqualToAnchor:parentView.bottomAnchor constant:-(bottomMargin)].active = true;
               [mRemoteView.trailingAnchor constraintEqualToAnchor:parentView.trailingAnchor constant:-(rightMargin)].active = true;
-              topMargin = parentView.bounds.size.height - height;
+              if(topMargin == 0){
+                  topMargin = parentView.bounds.size.height - height;
+              }
               [mRemoteView.topAnchor constraintEqualToAnchor:parentView.topAnchor constant:topMargin].active = true;
-              leftMargin = parentView.bounds.size.width - width;
+              if(leftMargin == 0){
+                 leftMargin = parentView.bounds.size.width - width;
+              }
                [mRemoteView.leadingAnchor constraintEqualToAnchor:parentView.leadingAnchor constant:leftMargin].active = true;
           }
 }
--(void)resizeViewRemoteConstant:(UIView*)view{
-    for(UIView *subview in view.subviews){
-        if([subview isKindOfClass:[UILabel class]]){
-            [self removeOldConstant:subview];
-            subview.translatesAutoresizingMaskIntoConstraints = false;
-            [subview.centerXAnchor constraintEqualToAnchor:subview.superview.centerXAnchor].active = YES;
-            [subview.centerYAnchor constraintEqualToAnchor:subview.superview.centerYAnchor].active = YES;
-            [view setNeedsLayout];
-        }
-        if([subview isKindOfClass:[UICollectionView class]]){
-            [self removeOldConstant:subview];
-        }
-    }
-}
--(void)removeOldConstant:(UIView*)view
-{
-    [view.superview.constraints enumerateObjectsUsingBlock:^(__kindof NSLayoutConstraint * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSLayoutConstraint *constraint = (NSLayoutConstraint *)obj;
-        if (constraint.firstItem == view || constraint.secondItem == view) {
-                [view.superview removeConstraint:constraint];
-        }
-    }];
-    [view removeConstraints:view.constraints];
-}
+
+// -(void)resizeViewRemoteConstant:(UIView*)view{
+//     for(UIView *subview in view.subviews){
+//         if([subview isKindOfClass:[UILabel class]]){
+//             [self removeOldConstant:subview];
+//             subview.translatesAutoresizingMaskIntoConstraints = false;
+//             [subview.centerXAnchor constraintEqualToAnchor:subview.superview.centerXAnchor].active = YES;
+//             [subview.centerYAnchor constraintEqualToAnchor:subview.superview.centerYAnchor].active = YES;
+//             [view setNeedsLayout];
+//         }
+//         if([subview isKindOfClass:[UICollectionView class]]){
+//             [self removeOldConstant:subview];
+//         }
+//     }
+// }
+// -(void)removeOldConstant:(UIView*)view
+// {
+//     [view.superview.constraints enumerateObjectsUsingBlock:^(__kindof NSLayoutConstraint * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//         NSLayoutConstraint *constraint = (NSLayoutConstraint *)obj;
+//         if (constraint.firstItem == view || constraint.secondItem == view) {
+//                 [view.superview removeConstraint:constraint];
+//         }
+//     }];
+//     [view removeConstraints:view.constraints];
+// }
     /*Disconnect Method*/
 -(void)disconnect:(CDVInvokedUrlCommand*)command{
     if(mEnxRoom != nil){
@@ -840,6 +1022,7 @@
                 if([str isEqualToString:@"local"]){
                     if(mlocalView != nil){
                         [self startLocalTouchListener:flag];
+                        [parentView bringSubviewToFront:mlocalView];
                     }
                     else{
                        [self reportErrorToJS:@"local view is not initialize : initLocalView "];
@@ -848,6 +1031,7 @@
                 else{
                     if(mRemoteView != nil){
                         [self startRemoteTouchListener:flag];
+                        [parentView bringSubviewToFront:mRemoteView];
                     }
                     else{
                        [self reportErrorToJS:@"remote view is not initialize : initRemoteView"];
@@ -927,8 +1111,8 @@
     @try {
         //To Do
             BOOL flag = [argu[@"hide"] boolValue];
-            //mRemoteView.hidden = flag;
-            //[self triggerSuccussJSEvent:@"hideScreenShareView" actionName:@"hideScreenShareView" requestData:@"Success"];
+            mOptionView.hidden = flag;
+            [self triggerSuccussJSEvent:@"hideScreenShareView" actionName:@"hideScreenShareView" requestData:@"Success"];
     }@catch (NSException *exception) {
         NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
     }
@@ -940,8 +1124,8 @@
     @try {
         //To Do
             BOOL flag = [argu[@"hide"] boolValue];
-            //mRemoteView.hidden = flag;
-           // [self triggerSuccussJSEvent:@"hideCanvasScreen" actionName:@"hideCanvasScreen" requestData:@"Success"];
+           mOptionView.hidden = flag;
+            [self triggerSuccussJSEvent:@"hideCanvasScreen" actionName:@"hideCanvasScreen" requestData:@"Success"];
     }@catch (NSException *exception) {
         NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
     }
@@ -1285,9 +1469,10 @@
     @try {
         if(argu != nil){
             if(mEnxRoom != nil){
-                NSString *number =argu[@"text"];
-                [mEnxRoom makeOutboundCall:number];
-                //[self triggerSuccussJSEvent:@"configuartionOptions" actionName:@"configuartionOptions" requestData:@"Success"];
+                 NSString *number =argu[@"number"];
+                 NSString *callerId = argu[@"callerId"];
+                 NSDictionary *dialOptions =argu[@"dialOptions"];
+              [mEnxRoom makeOutboundCall:number callerId:callerId withDialOptions:dialOptions];
             }else{
                [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
             }
@@ -1298,6 +1483,27 @@
         NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
     }
 }
+/*Make out bond call to any numble*/
+-(void)cancelOutboundCall:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"cancelOutboundCall"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+            if(mEnxRoom != nil){
+                 NSString *number =argu[@"number"];
+                
+              [mEnxRoom cancelOutboundCall:number];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+
 /*Send chat message in room*/
 -(void)sendMessage:(CDVInvokedUrlCommand*)command{
     [eventListional setObject:command.callbackId forKey:@"sendMessage"];
@@ -1534,7 +1740,232 @@
        [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
     }
 }
+/*Handle Screen when screen share started*/
+-(void)addScreenShare:(CDVInvokedUrlCommand*)command{
+    //TO Do
+    [eventListional setObject:command.callbackId forKey:@"addScreenShare"];
+    @try {
+        NSLog(@"ParentView %@",parentView);
+         NSDictionary* phrase = [command.arguments objectAtIndex:0];
+        if(phrase[@"viewOptions"] != nil){
+            [self createOptionView:phrase[@"viewOptions"]];
+            [self triggerSuccussJSEvent:@"addScreenShare" actionName:@"addScreenShare" requestData:@"Success"];
 
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+/*Handle Screen when Canvas started*/
+-(void)addCanvasScreen:(CDVInvokedUrlCommand*)command{
+    //TO Do
+    [eventListional setObject:command.callbackId forKey:@"addCanvasScreen"];
+    @try {
+        NSLog(@"ParentView %@",parentView);
+         NSDictionary* phrase = [command.arguments objectAtIndex:0];
+        if(phrase[@"viewOptions"] != nil){
+            [self createOptionView:phrase[@"viewOptions"]];
+            [self triggerSuccussJSEvent:@"addCanvasScreen" actionName:@"addCanvasScreen" requestData:@"Success"];
+
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+/*Handle Screen when Annotation started*/
+-(void)addAnnotationScreen:(CDVInvokedUrlCommand*)command{
+    //TO Do
+    [eventListional setObject:command.callbackId forKey:@"addAnnotationScreen"];
+    @try {
+        NSLog(@"ParentView %@",parentView);
+         NSDictionary* phrase = [command.arguments objectAtIndex:0];
+        if(phrase[@"viewOptions"] != nil){
+            [self createOptionView:phrase[@"viewOptions"]];
+            [self triggerSuccussJSEvent:@"addAnnotationScreen" actionName:@"addAnnotationScreen" requestData:@"Success"];
+
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+/*Handle Screen when screen share stoped*/
+-(void)removeScreenShare:(CDVInvokedUrlCommand*)command{
+    //TO Do
+    [eventListional setObject:command.callbackId forKey:@"removeScreenShare"];
+    [self cleanOptionView];
+    [self triggerSuccussJSEvent:@"removeScreenShare" actionName:@"removeScreenShare" requestData:@"Success"];
+}
+/*Handle Screen when Canvas stoped*/
+-(void)removeCanvasScreen:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"removeCanvasScreen"];
+    [self cleanOptionView];
+    [self triggerSuccussJSEvent:@"removeCanvasScreen" actionName:@"removeCanvasScreen" requestData:@"Success"];
+}
+/*Handle Screen when Annotation stoped*/
+-(void)removeAnnotationScreen:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"removeAnnotationScreen"];
+    [self cleanOptionView];
+    [self triggerSuccussJSEvent:@"removeAnnotationScreen" actionName:@"removeAnnotationScreen" requestData:@"Success"];
+}
+/*Hide Annotation Screen*/
+-(void)hideAnnotationScreen:(CDVInvokedUrlCommand*)command{
+    //TO Do
+    [eventListional setObject:command.callbackId forKey:@"hideAnnotationScreen"];
+      NSDictionary* argu = [command.arguments objectAtIndex:0];
+      @try {
+          //To Do
+              BOOL flag = [argu[@"hide"] boolValue];
+             mOptionView.hidden = flag;
+              [self triggerSuccussJSEvent:@"hideAnnotationScreen" actionName:@"hideAnnotationScreen" requestData:@"Success"];
+      }@catch (NSException *exception) {
+          NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+      }
+}
+-(void)createOptionStream:(EnxStream *)stream{
+    if(stream != nil){
+        mOptionStream = stream;
+        if(mOptionStream.enxPlayerView != nil){
+            mOptionPlayer = (EnxPlayerView*)mOptionStream.enxPlayerView; 
+            mOptionPlayer.delegate = self;
+        }
+    }
+    // NSDictionary *remoteStreamDict = mEnxRoom.streamsByStreamId;
+    // NSString *streamId = [NSString stringWithFormat:@"%@",dict[@"streamId"]];
+    // mOptionStream =  [remoteStreamDict objectForKey:streamId];
+    // if(mOptionPlayer == nil){
+    //     mOptionPlayer = [[EnxPlayerView alloc]initRemoteView:CGRectZero];
+    //     mOptionPlayer.delegate = self;
+    // }
+    // [mOptionStream attachRenderer:mOptionPlayer];
+}
+-(void)createOptionStreamForAnnotation:(NSDictionary *)dict{
+    NSDictionary *remoteStreamDict = mEnxRoom.streamsByStreamId;
+    NSString *streamId = [NSString stringWithFormat:@"%@",dict[@"streamId"]];
+    mOptionStream =  [remoteStreamDict objectForKey:streamId];
+    if(mOptionPlayer == nil){
+        mOptionPlayer = [[EnxPlayerView alloc]initRemoteView:CGRectZero];
+        mOptionPlayer.delegate = self;
+    }
+    [mOptionStream attachRenderer:mOptionPlayer];
+}
+/*Create option View for Screen Share ,Canvas,whiteboard,annotation*/
+-(void)createOptionView:(NSDictionary*)options{
+    if(mOptionView == nil){
+        mOptionView =[[UIView alloc]initWithFrame:CGRectZero];
+        [parentView addSubview:mOptionView];
+        [mOptionView setBackgroundColor:[UIColor blackColor]];
+        [parentView bringSubviewToFront:mOptionView];
+        [parentView bringSubviewToFront:mlocalView];
+        [self addConstantForOptionsView:options];
+        [mOptionView addSubview:mOptionPlayer];
+        [self setLayoutOptionPlayerConstant:mOptionPlayer];
+    }
+}
+/*Add Constant for optionView*/
+-(void)addConstantForOptionsView:(NSDictionary*)details{
+    mOptionView.translatesAutoresizingMaskIntoConstraints = false;
+                int height = 0;
+                int width = 0;
+               NSString *position = @"right";
+                int topMargin = 0;
+                int leftMargin = 0;
+                int rightMargin = 0;
+                int bottomMargin = 0;
+               if(details[@"height"] != nil){
+                   height = [details[@"height"] intValue];
+               }
+               if(details[@"width"] != nil){
+                   width = [details[@"width"] intValue];
+               }
+                if(details[@"margin_top"] != nil){
+                    topMargin = [details[@"margin_top"] intValue];
+                }
+                if(details[@"margin_left"] != nil){
+                    leftMargin = [details[@"margin_left"] intValue];
+                }
+                if(details[@"margin_right"] != nil){
+                    rightMargin = [details[@"margin_right"] intValue];
+                }
+                if(details[@"margin_bottom"] != nil){
+                    bottomMargin = [details[@"margin_bottom"] intValue];
+                }
+               if(details[@"position"] != nil){
+                   position = details[@"position"];
+               }
+            if(height == 0 || height >= parentView.bounds.size.height){
+                    height = parentView.bounds.size.height;
+                    height = height - (topMargin + bottomMargin);
+            }
+            if(width == 0 || width >= parentView.bounds.size.width){
+                width = parentView.bounds.size.width;
+                width = width - (leftMargin +rightMargin);
+            }
+    if([position isEqualToString:@"right"] ){
+              [mOptionView.topAnchor constraintEqualToAnchor:parentView.topAnchor constant:topMargin].active = true;
+              [mOptionView.trailingAnchor constraintEqualToAnchor:parentView.trailingAnchor constant:-(rightMargin)].active = true;
+                if(leftMargin == 0){
+                    leftMargin = parentView.bounds.size.width - width;
+                }
+            [mOptionView.leadingAnchor constraintEqualToAnchor:parentView.leadingAnchor constant:leftMargin].active = true;
+            if(bottomMargin == 0){
+                bottomMargin = parentView.bounds.size.height - height;
+            }
+        [mOptionView.bottomAnchor constraintEqualToAnchor:parentView.bottomAnchor constant:-(bottomMargin)].active = true;
+          }
+          else if([position isEqualToString:@"left"] ){
+              [mOptionView.topAnchor constraintEqualToAnchor:parentView.topAnchor constant:topMargin].active = true;
+              [mOptionView.leadingAnchor constraintEqualToAnchor:parentView.leadingAnchor constant:leftMargin].active = true;
+              if(bottomMargin == 0){
+                  bottomMargin = parentView.bounds.size.height - height;
+              }
+              [mOptionView.bottomAnchor constraintEqualToAnchor:parentView.bottomAnchor constant:-(bottomMargin)].active = true;
+              if(rightMargin == 0){
+                  rightMargin = parentView.bounds.size.width - width;
+              }
+              [mOptionView.trailingAnchor constraintEqualToAnchor:parentView.trailingAnchor constant:-(rightMargin)].active = true;
+          }
+          else if([position isEqualToString:@"top"] ){
+              [mOptionView.topAnchor constraintEqualToAnchor:parentView.topAnchor constant:topMargin].active = true;
+              [mOptionView.trailingAnchor constraintEqualToAnchor:parentView.trailingAnchor constant:-(rightMargin)].active = true;
+              if(bottomMargin == 0){
+                  bottomMargin = parentView.bounds.size.height - height;
+              }
+              [mOptionView.bottomAnchor constraintEqualToAnchor:parentView.bottomAnchor constant:-(bottomMargin)].active = true;
+              if(leftMargin == 0){
+                  leftMargin = parentView.bounds.size.width - width;
+              }
+              [mOptionView.leadingAnchor constraintEqualToAnchor:parentView.leadingAnchor constant:leftMargin].active = true;
+          }
+          else if([position isEqualToString:@"bottom"] ){
+              [mOptionView.bottomAnchor constraintEqualToAnchor:parentView.bottomAnchor constant:-(bottomMargin)].active = true;
+              [mOptionView.trailingAnchor constraintEqualToAnchor:parentView.trailingAnchor constant:-(rightMargin)].active = true;
+              if(topMargin == 0){
+                  topMargin = parentView.bounds.size.height - height;
+              }
+              [mOptionView.topAnchor constraintEqualToAnchor:parentView.topAnchor constant:topMargin].active = true;
+              if(leftMargin == 0){
+                 leftMargin = parentView.bounds.size.width - width;
+              }
+               [mOptionView.leadingAnchor constraintEqualToAnchor:parentView.leadingAnchor constant:leftMargin].active = true;
+          }
+}
+/*Add constant For OptionPlayer View*/
+-(void)setLayoutOptionPlayerConstant:(EnxPlayerView*)view{
+    view.translatesAutoresizingMaskIntoConstraints = false;
+    [view.leadingAnchor constraintEqualToAnchor:mOptionView.leadingAnchor constant:1.0].active = true;
+    [view.bottomAnchor constraintEqualToAnchor:mOptionView.bottomAnchor constant:1.0].active = true;
+    
+    [view.trailingAnchor constraintEqualToAnchor:mOptionView.trailingAnchor constant:1.0].active = true;
+    [view.topAnchor constraintEqualToAnchor:mOptionView.topAnchor constant:1.0].active = true;
+}
+
+-(void)cleanOptionView{
+    [mOptionStream detachRenderer];
+    [mOptionPlayer removeFromSuperview];
+    [mOptionView removeFromSuperview];
+    mOptionPlayer = nil;
+    mOptionView = nil;
+}
 #pragma -mark Chair Controller Methods
 /*This method for participent, Where he/she request for floor access*/
 -(void)requestFloor:(CDVInvokedUrlCommand*)command{
@@ -1624,6 +2055,475 @@
     }
 }
 
+#pragma - make Pin/Unpin user
+/*This method for Modaitore, Where he/she can releaseFloor any particepnt floor request*/
+-(void)pinUsers:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"pinUsers"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+            if(mEnxRoom != nil){
+                NSArray *clientIds = argu[@"clientIds"];
+                [mEnxRoom pinUsers:clientIds];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+
+}
+/*This method for Modaitore, Where he/she can releaseFloor any particepnt floor request*/
+-(void)unpinUsers:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"unpinUsers"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+            if(mEnxRoom != nil){
+                NSArray *clientIds = argu[@"clientIds"];
+                [mEnxRoom unpinUsers:clientIds];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+
+
+#pragma - make Spotlight user
+/*This method add spotlight user*/
+-(void)addSpotlightUsers:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"addSpotlightUsers"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+            if(mEnxRoom != nil){
+                NSArray *clientIds = argu[@"clientIds"];
+                [mEnxRoom addSpotlightUsers:clientIds];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+
+}
+/*This method for remove spotlight user*/
+-(void)removeSpotlightUsers:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"removeSpotlightUsers"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+            if(mEnxRoom != nil){
+                NSArray *clientIds = argu[@"clientIds"];
+                [mEnxRoom removeSpotlightUsers:clientIds];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+
+/*Audio Energy /Talker Notification*/
+-(void)subscribeForTalkerNotification:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"subscribeForTalkerNotification"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 BOOL flag = [argu[@"isTalkerNofitication"] boolValue];
+                [mEnxRoom subscribeForTalkerNotification:flag];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+/*inviteToFloor*/
+-(void)inviteToFloor:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"inviteToFloor"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 NSString *clientid = argu[@"clientid"];
+                [mEnxRoom inviteToFloor:clientid];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+/*inviteToFloor*/
+-(void)cancelFloorInvite:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"cancelFloorInvite"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 NSString *clientid = argu[@"clientid"];
+                [mEnxRoom cancelFloorInvite:clientid];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+
+/*inviteToFloor*/
+-(void)rejectInviteFloor:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"rejectInviteFloor"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 NSString *clientid = argu[@"clientid"];
+                [mEnxRoom rejectInviteFloor:clientid];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+
+/*inviteToFloor*/
+-(void)acceptInviteFloorRequest:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"acceptInviteFloorRequest"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 NSString *clientid = argu[@"clientid"];
+                [mEnxRoom acceptInviteFloorRequest:clientid];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+
+
+
+/*Switch Room mode*/
+-(void)switchRoomMode:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"switchRoomMode"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 NSString *roomMode = argu[@"roomMode"];
+                [mEnxRoom switchRoomMode:roomMode];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+
+/* Single Mute Audio */
+-(void)hardMuteUserAudio:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"hardMuteUserAudio"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 NSString *clientId = argu[@"clientId"];
+                [mEnxRoom hardMuteUserAudio:clientId];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+/* Single UnMute Audio */
+-(void)hardUnmuteUserAudio:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"hardUnmuteUserAudio"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 NSString *clientId = argu[@"clientId"];
+                [mEnxRoom hardUnmuteUserAudio:clientId];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+
+/* Single Mute Video */
+-(void)hardMuteUserVideo:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"hardMuteUserVideo"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 NSString *clientId = argu[@"clientId"];
+                [mEnxRoom hardMuteUserVideo:clientId];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+
+/* Single UnMute Video */
+
+-(void)hardUnmuteUserVideo:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"hardUnmuteUserVideo"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 NSString *clientId = argu[@"clientId"];
+                [mEnxRoom hardUnmuteUserVideo:clientId];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+
+-(void)highlightBorderForClient:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"highlightBorderForClient"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+            if(mEnxRoom != nil){
+                NSArray *clientIds = argu[@"clientIds"];
+                [mEnxRoom highlightBorderForClient:clientIds];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+
+}
+
+
+- (UIColor *)colorFromHexString:(NSString *)hexString {
+    unsigned rgbValue = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:hexString];
+    [scanner setScanLocation:1]; // bypass '#' character
+    [scanner scanHexInt:&rgbValue];
+    return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
+}
+
+
+-(void)changeBgColorForClients:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"changeBgColorForClients"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+            if(mEnxRoom != nil){
+                NSArray *clientIds = argu[@"clientIds"];
+                NSString *color=argu[@"color"];
+              UIColor *finalColor = [self colorFromHexString:color];
+
+
+                [mEnxRoom changeBgColorForClients:clientIds withColor:finalColor];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+
+}
+ /*Precall Test*/
+/*-(void)clientDiagnostics:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"clientDiagnostics"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+              NSDictionary *precallDict = argu[@"precallJson"];
+                
+                [mEnxRtc clientDiagnostics:precallDict];
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+} */
+
+-(void)captureScreenShot:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"captureScreenShot"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 NSString *streamId = argu[@"streamId"];
+                 EnxStream *stream = (EnxStream*) [mEnxRoom.streamsByStreamId objectForKey:streamId];
+                    if(stream.enxPlayerView != nil){
+                        EnxPlayerView *tempPlayer = (EnxPlayerView*)mOptionStream.enxPlayerView;
+                         [tempPlayer captureScreenShot];
+                    }
+
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+}
+
+-(void)subscribeForLiveTranscription:(CDVInvokedUrlCommand*)command{
+ [eventListional setObject:command.callbackId forKey:@"subscribeForLiveTranscription"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 BOOL enable = argu[@"enable"];
+                [mEnxRoom subscribeForLiveTranscription:enable];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+
+
+}
+
+-(void)startLiveTranscriptionForRoom:(CDVInvokedUrlCommand*)command{
+ [eventListional setObject:command.callbackId forKey:@"startLiveTranscriptionForRoom"];
+    NSDictionary* argu = [command.arguments objectAtIndex:0];
+    @try {
+        if(argu != nil){
+             if(mEnxRoom != nil){
+                 NSString *language = argu[@"language"];
+                [mEnxRoom startLiveTranscriptionForRoom:language];
+            }else{
+               [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+            }
+          
+           
+            
+        }else{
+           [self reportErrorToJS:[NSString stringWithFormat:@"Wrong JSON  : %@",argu]];
+        }
+    }@catch (NSException *exception) {
+        NSLog(@"%@", [NSString stringWithFormat:@"%@",exception.description]);
+    }
+
+
+}
+-(void)stopLiveTranscription:(CDVInvokedUrlCommand*)command{
+    [eventListional setObject:command.callbackId forKey:@"stopLiveTranscription"];
+    if(mEnxRoom != nil){
+        [mEnxRoom stopLiveTranscription];
+        //[self triggerSuccussJSEvent:@"getAdvancedOptions" actionName:@"getAdvancedOptions" requestData:@"Success"];
+    }else{
+       [self reportErrorToJS:@"Object is not initialize : EnxRoom"];
+    }
+}
+
+
 
 
 #pragma -mark Delegates Methods
@@ -1666,6 +2566,8 @@
 -(void)room:(EnxRoom *)room didActiveTalkerList:(NSArray * _Nullable)Data{
     //[mRemoteView addSubview:view];
     //[self setLayoutConstant:view];
+    
+
 }
 /*Self Audio Mute/Unmute callback*/
 -(void)didAudioEvents:(NSDictionary *_Nullable)data{
@@ -1808,6 +2710,10 @@ Get Max Talker Count In room
 - (void)room:(EnxRoom *_Nonnull)room didUserDataReceived:(NSArray *_Nullable)data{
     [self triggerSuccussJSEvent:@"onUserDataReceived" actionName:@"onUserDataReceived" requestData:data[0]];
 }
+- (void)room:(EnxRoom *_Nullable)room didRoomBandwidthAlert:(NSArray *_Nullable)data{
+    [self triggerSuccussJSEvent:@"onRoomBandwidthAlert" actionName:@"onRoomBandwidthAlert" requestData:data[0]];
+}
+
 - (void)room:(EnxRoom *_Nullable)room didSwitchUserRole:(NSArray *_Nullable)data{
     [self triggerSuccussJSEvent:@"onSwitchedUserRole" actionName:@"onSwitchedUserRole" requestData:data[0]];
 }
@@ -1867,8 +2773,26 @@ Get Max Talker Count In room
      [self triggerSuccussJSEvent:@"onOutBoundCallInitiated" actionName:@"onOutBoundCallInitiated" requestData:data[0]];
 }
 - (void)room:(EnxRoom *_Nullable)room didDialStateEvents:(EnxOutBoundCallState)state{
-    // [self triggerSuccussJSEvent:@"onDialStateEvents" actionName:@"onDialStateEvents" requestData:state];
+
+   NSString *statusName = @"Initiated";
+    if(state == Initiated){statusName = @"Initiated";}
+     else if(state == Ringing){ statusName = @"Ringing";}
+     else if(state == Connected){statusName = @"Connected"; }
+    else if(state == Failed){  statusName = @"Failed";  }
+    else if(state == Disconnected){ statusName = @"Disconnected";}
+    else if(state == Timeout){ statusName = @"Timeout";}
+    
+    [self triggerSuccussJSEvent:@"onDialStateEvents" actionName:@"onDialStateEvents" requestData:statusName];
 }
+- (void)room:(EnxRoom *_Nullable)room didDTMFCollected:(NSString*_Nullable)dtmfCollected{ 
+  [self triggerSuccussJSEvent:@"onDTMFCollected" actionName:@"onDTMFCollected" requestData:dtmfCollected];
+     }
+-(void)room:(EnxRoom *_Nullable)room didOutBoundCallCancel:(NSArray *_Nullable)data{
+         [self triggerSuccussJSEvent:@"onOutBoundCallCancel" actionName:@"onOutBoundCallCancel" requestData:data[0]];
+
+}
+
+
 -(void)didPlayerStats:(NSDictionary * _Nonnull)data{
      [self triggerSuccussJSEvent:@"onPlayerStats" actionName:@"onPlayerStats" requestData:data];
 }
@@ -1959,20 +2883,26 @@ didFileDownloadCancelled:(NSArray *_Nullable)data{
 didFileUploadCancelled:(NSArray *_Nullable)data{
    [self triggerSuccussJSEvent:@"onFileUploadCancelled" actionName:@"onFileUploadCancelled" requestData:data[0]];
 }
--(void)room:(EnxRoom *_Nullable)room screenSharedStarted:(NSArray *_Nullable)Data{
-    [self triggerSuccussJSEvent:@"onScreenSharedStarted" actionName:@"onScreenSharedStarted" requestData:Data[0]];
+-(void)room:(EnxRoom *_Nullable)room didScreenShareStarted:(EnxStream *_Nullable)stream{
+    [self triggerSuccussJSEvent:@"onScreenSharedStarted" actionName:@"onScreenSharedStarted" requestData:@{@"eventType" : @"onScreenSharedStarted" , @"data" : @"Screen shared started"}];
+    [self createOptionStream:stream];
 }
--(void)room:(EnxRoom *_Nullable)room screenShareStopped:(NSArray *_Nullable)Data{
-    [self triggerSuccussJSEvent:@"onScreenSharedStopped" actionName:@"onScreenSharedStopped" requestData:Data[0]];
+-(void)room:(EnxRoom *_Nullable)room didScreenShareStopped:(EnxStream *_Nullable)stream{
+    [self triggerSuccussJSEvent:@"onScreenSharedStopped" actionName:@"onScreenSharedStopped" requestData:@{@"eventType" : @"onScreenSharedStopped" , @"data" : @"Screen shared stopped"}];
 }
--(void)room:(EnxRoom *_Nullable)room canvasStarted:(NSArray *_Nullable)Data{
-    [self triggerSuccussJSEvent:@"onCanvasStarted" actionName:@"onCanvasStarted" requestData:Data[0]];
+-(void)room:(EnxRoom *_Nullable)room didCanvasStarted:(EnxStream *_Nullable)stream{
+    [self triggerSuccussJSEvent:@"onCanvasStarted" actionName:@"onCanvasStarted" requestData:@{@"eventType" : @"onCanvasStarted" , @"data" : @"Canvas started"}];
+    [self createOptionStream:stream];
 }
--(void)room:(EnxRoom *_Nullable)room canvasStopped:(NSArray *_Nullable)Data{
-    [self triggerSuccussJSEvent:@"onCanvasStopped" actionName:@"onCanvasStopped" requestData:Data[0]];
+-(void)room:(EnxRoom *_Nullable)room didCanvasStopped:(EnxStream *_Nullable)stream{
+    [self triggerSuccussJSEvent:@"onCanvasStopped" actionName:@"onCanvasStopped" requestData:@{@"eventType" : @"onCanvasStopped" , @"data" : @"Canvas stopprd"}];
 }
 -(void)room:(EnxRoom *_Nullable)room didAnnotationStarted:(NSArray *_Nullable)Data{
     [self triggerSuccussJSEvent:@"onAnnotationStarted" actionName:@"onAnnotationStarted" requestData:Data[0]];
+    if(Data.count == 0){
+        return;
+    }
+    [self createOptionStreamForAnnotation:Data[0]];
 }
 -(void)room:(EnxRoom *_Nullable)room didAnnotationStopped:(NSArray *_Nullable)Data{
     [self triggerSuccussJSEvent:@"onAnnotationStopped" actionName:@"onAnnotationStopped" requestData:Data[0]];
@@ -2008,6 +2938,9 @@ didFileUploadCancelled:(NSArray *_Nullable)data{
 }
 -(void)didCapturedView:(UIImage*_Nonnull)snapShot{
     //TO Do
+    NSData *imageData = UIImagePNGRepresentation(snapShot);
+    NSString *strBase64 = [imageData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+    [self triggerSuccussJSEvent:@"OnCapturedView" actionName:@"OnCapturedView" requestData:strBase64];
 }
 #pragma -mark Callback Methods for Chair controler
 - (void)didFloorRequested:(NSArray *_Nullable)Data{
@@ -2040,6 +2973,147 @@ didFileUploadCancelled:(NSArray *_Nullable)data{
 - (void)didProcessFloorRequested:(NSArray *_Nullable)Data{
     [self triggerSuccussJSEvent:@"onProcessFloorRequested" actionName:@"onProcessFloorRequested" requestData:Data[0]];
 }
+
+- (void)didACKInviteToFloorRequested:(NSArray *_Nullable)Data{
+    [self triggerSuccussJSEvent:@"onACKInviteToFloorRequested" actionName:@"onACKInviteToFloorRequested" requestData:Data[0]];
+}
+- (void)didInviteToFloorRequested:(NSArray *_Nullable)Data{
+    [self triggerSuccussJSEvent:@"onInviteToFloorRequested" actionName:@"onInviteToFloorRequested" requestData:Data[0]];
+}
+- (void)didInvitedForFloorAccess:(NSArray *_Nullable)Data{
+    [self triggerSuccussJSEvent:@"onInvitedForFloorAccess" actionName:@"onInvitedForFloorAccess" requestData:Data[0]];
+}
+- (void)didCanceledFloorInvite:(NSArray *_Nullable)Data{
+    [self triggerSuccussJSEvent:@"onCanceledFloorInvite" actionName:@"onCanceledFloorInvite" requestData:Data[0]];
+}
+- (void)didRejectedInviteFloor:(NSArray *_Nullable)Data{
+    [self triggerSuccussJSEvent:@"onRejectedInviteFloor" actionName:@"onRejectedInviteFloor" requestData:Data[0]];
+}
+- (void)didAcceptedFloorInvite:(NSArray *_Nullable)Data{
+    [self triggerSuccussJSEvent:@"onAcceptedFloorInvite" actionName:@"onAcceptedFloorInvite" requestData:Data[0]];
+}
+#pragma -mark pin/unpin callback
+
+- (void)room:(EnxRoom *_Nullable)channel didACKAddPingUser:(NSArray *_Nullable)data{
+    [self triggerSuccussJSEvent:@"onAckPinUsers" actionName:@"onAckPinUsers" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didACKRemovePingUser:(NSArray * _Nullable)data{
+    [self triggerSuccussJSEvent:@"onAckUnpinUsers" actionName:@"onAckUnpinUsers" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didPingedUsers:(NSArray *_Nullable)data{
+    [self triggerSuccussJSEvent:@"onPinnedUsers" actionName:@"onPinnedUsers" requestData:data[0]];
+}
+
+#pragma -mark spotlight callback
+
+- (void)room:(EnxRoom *_Nullable)channel didAckAddSpotlightUsers:(NSArray *_Nullable)data{
+    [self triggerSuccussJSEvent:@"onAckAddSpotlightUsers" actionName:@"onAckAddSpotlightUsers" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didAckRemoveSpotlightUsers:(NSArray * _Nullable)data{
+    [self triggerSuccussJSEvent:@"onAckRemoveSpotlightUsers" actionName:@"onAckRemoveSpotlightUsers" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didUpdatedSpotlightUsers:(NSArray *_Nullable)data{
+    [self triggerSuccussJSEvent:@"onUpdateSpotlightUsers" actionName:@"onUpdateSpotlightUsers" requestData:data[0]];
+}
+
+#pragma -mark AudioEnergy /Talker Notification callback
+- (void)room:(EnxRoom *_Nullable)channel didAckSubscribeTalkerNotification:(NSArray *_Nullable)data{
+    [self triggerSuccussJSEvent:@"onAckSubscribeTalkerNotification" actionName:@"onAckSubscribeTalkerNotification" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didAckUnsubscribeTalkerNotification:(NSArray * _Nullable)data{
+    [self triggerSuccussJSEvent:@"onAckUnsubscribeTalkerNotification" actionName:@"onAckUnsubscribeTalkerNotification" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didTalkerNotification:(NSArray *_Nullable)data{
+    [self triggerSuccussJSEvent:@"onTalkerNtification" actionName:@"onTalkerNtification" requestData:data[0]];
+}
+
+#pragma -mark switched Room Callback
+- (void)room:(EnxRoom *_Nullable)channel didAckSwitchedRoom:(NSArray *_Nullable)data{
+    [self triggerSuccussJSEvent:@"onAckSwitchedRoom" actionName:@"onAckSwitchedRoom" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didRoomModeSwitched:(NSArray * _Nullable)data{
+    [self triggerSuccussJSEvent:@"onRoomModeSwitched" actionName:@"onRoomModeSwitched" requestData:data[0]];
+}
+
+
+#pragma -mark  single mute user audio
+- (void)didAckHardMuteUserAudio:(NSArray * _Nullable)data{
+    [self triggerSuccussJSEvent:@"onAckHardMuteUserAudio" actionName:@"onAckHardMuteUserAudio" requestData:data[0]];
+}
+
+#pragma -mark  single unmute user audio
+- (void)didAckHardunMuteUserAudio:(NSArray * _Nullable)data{
+    [self triggerSuccussJSEvent:@"onAckHardunMuteUserAudio" actionName:@"onAckHardunMuteUserAudio" requestData:data[0]];
+}
+
+
+#pragma -mark  single mute user video
+- (void)didAckHardMuteUserVideo:(NSArray * _Nullable)data{
+    [self triggerSuccussJSEvent:@"onAckHardMuteUserVideo" actionName:@"onAckHardMuteUserVideo" requestData:data[0]];
+}
+#pragma -mark  single unmute user video
+
+- (void)didAckHardUnMuteUserVideo:(NSArray * _Nullable)data{
+    [self triggerSuccussJSEvent:@"onAckHardUnMuteUserVideo" actionName:@"onAckHardUnMuteUserVideo" requestData:data[0]];
+}
+
+
+#pragma -mark Livetranscription(Speech to text) callbacks
+- (void)room:(EnxRoom *_Nullable)channel didACKStartLiveTranscription:(NSArray * _Nonnull)data{
+    [self triggerSuccussJSEvent:@"onACKStartLiveTranscription" actionName:@"onACKStartLiveTranscription" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didACKStopLiveTranscription:(NSArray * _Nonnull)data{
+    [self triggerSuccussJSEvent:@"onACKStopLiveTranscription" actionName:@"onACKStopLiveTranscription" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didACKSubscribeForLiveTranscription:(NSArray * _Nonnull)data{
+    [self triggerSuccussJSEvent:@"onACKSubscribeForLiveTranscription" actionName:@"onACKSubscribeForLiveTranscription" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didTranscriptionEvents:(NSArray * _Nonnull)data{
+    [self triggerSuccussJSEvent:@"onTranscriptionEvents" actionName:@"onTranscriptionEvents" requestData:data[0]];
+}
+
+- (void)room:(EnxRoom *_Nullable)channel didRoomTranscriptionOn:(NSArray * _Nonnull)data{
+    [self triggerSuccussJSEvent:@"onRoomTranscriptionOn" actionName:@"onRoomTranscriptionOn" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didRoomTranscriptionOff:(NSArray * _Nonnull)data{
+    [self triggerSuccussJSEvent:@"onRoomTranscriptionOff" actionName:@"onRoomTranscriptionOff" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didSelfTranscriptionOn:(NSArray * _Nonnull)data{
+    [self triggerSuccussJSEvent:@"onSelfTranscriptionOn" actionName:@"onSelfTranscriptionOn" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didSelfTranscriptionOff:(NSArray * _Nonnull)data{
+    [self triggerSuccussJSEvent:@"onSelfTranscriptionOff" actionName:@"onSelfTranscriptionOff" requestData:data[0]];
+}
+
+#pragma -hls started
+- (void)room:(EnxRoom *_Nullable)channel didHlsStarted:(NSArray * _Nonnull)data{
+    [self triggerSuccussJSEvent:@"onHlsStarted" actionName:@"onHlsStarted" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didHlsStopped:(NSArray * _Nonnull)data{
+    [self triggerSuccussJSEvent:@"onHlsStopped" actionName:@"onHlsStopped" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didHlsFailed:(NSArray * _Nonnull)data{
+    [self triggerSuccussJSEvent:@"onHlsFailed" actionName:@"onHlsFailed" requestData:data[0]];
+}
+- (void)room:(EnxRoom *_Nullable)channel didHlsWaiting:(NSArray * _Nonnull)data{
+    [self triggerSuccussJSEvent:@"onHlsWaiting" actionName:@"onHlsWaiting" requestData:data[0]];
+}
+
+#pragma -mark precall test callbacks
+/*-(void)didClientDiagnosisFailed:(NSArray * _Nullable)data{
+      [self triggerSuccussJSEvent:@"onClientDiagnosisFailed" actionName:@"onClientDiagnosisFailed" requestData:data[0]];
+}
+-(void)didClientDiagnosisStatus:(NSArray * _Nullable)data{
+      [self triggerSuccussJSEvent:@"onClientDiagnosisStatus" actionName:@"onClientDiagnosisStatus" requestData:data[0]];
+}
+
+-(void)didClientDiagnosisStopped:(NSArray * _Nullable)data{
+      [self triggerSuccussJSEvent:@"onClientDiagnosisStopped" actionName:@"onClientDiagnosisStopped" requestData:data[0]];
+}
+
+-(void)didClientDiagnosisFinished:(NSArray * _Nullable)data{
+      [self triggerSuccussJSEvent:@"onClientDiagnosisFinished" actionName:@"onClientDiagnosisFinished" requestData:data[0]];
+} */
 
 #pragma -mark Common Methods
 /*Common method for All events*/
@@ -2099,6 +3173,12 @@ didFileUploadCancelled:(NSArray *_Nullable)data{
     }
     if(mLocalStream != nil){
         mLocalStream = nil;
+    }
+    if(mOptionView != nil){
+        mOptionView = nil;
+    }
+    if(mOptionPlayer != nil){
+        mOptionPlayer = nil;
     }
 }
 @end

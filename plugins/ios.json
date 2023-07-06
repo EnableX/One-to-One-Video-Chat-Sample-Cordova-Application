@@ -8,13 +8,10 @@
   },
   "installed_plugins": {
     "cordova-plugin-enable-multidex": {
-      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
+      "PACKAGE_NAME": "com.example.Sample"
     },
     "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
-    },
-    "enablex-cordova-plugin": {
-      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
+      "PACKAGE_NAME": "com.example.Sample"
     }
   },
   "dependent_plugins": {}

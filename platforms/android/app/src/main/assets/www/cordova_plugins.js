@@ -13,6 +13,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
   module.exports.metadata = {
     "cordova-plugin-enable-multidex": "0.2.0",
     "cordova-plugin-whitelist": "1.3.4",
-    "enablex-cordova-plugin": "1.9.8"
+    "enablex-cordova-plugin": "2.1.0"
   };
 });

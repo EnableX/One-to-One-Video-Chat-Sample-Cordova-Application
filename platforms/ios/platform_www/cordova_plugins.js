@@ -5,7 +5,7 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "file": "plugins/enablex-cordova-plugin/www/enxcordovaplugin.js",
       "pluginId": "enablex-cordova-plugin",
       "clobbers": [
-        "EnxCordovaPlugin"
+        "EnxRtc"
       ],
       "runs": true
     }
@@ -13,6 +13,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
   module.exports.metadata = {
     "cordova-plugin-enable-multidex": "0.2.0",
     "cordova-plugin-whitelist": "1.3.4",
-    "enablex-cordova-plugin": "1.0.5"
+    "enablex-cordova-plugin": "2.1.0"
   };
 });

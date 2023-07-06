@@ -25,9 +25,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSMainNibFile</key>
-	<string/>
+	<string></string>
 	<key>NSMainNibFile~ipad</key>
-	<string/>
+	<string></string>
+	<key>UILaunchStoryboardName</key>
+	<string>CDVLaunchScreen</string>
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>
@@ -48,5 +50,9 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>App USer camera </string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>App USer Micro phone </string>
 </dict>
 </plist>

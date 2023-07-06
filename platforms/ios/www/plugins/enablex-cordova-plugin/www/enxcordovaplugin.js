@@ -2,7 +2,7 @@ cordova.define("enablex-cordova-plugin.enxcordovaplugin", function(require, expo
 
 var exec = require('cordova/exec');
 
-var PLUGIN_NAME = 'EnxCordovaPlugin';
+var PLUGIN_NAME = 'EnxRtc';
 
 var EnxCordovaPlugin = {
 
@@ -23,12 +23,12 @@ var EnxCordovaPlugin = {
    * @param {JSON} publishStreamInfo  publishStreamInfo for local streams
    * @param {JSON} roomInfo 
    */
-  joinRoom: function (token, publishStreamInfo, roomInfo) {
+  joinRoom: function (token, publishStreamInfo, roomInfo, successCallback, errorCallback) {
     var options = {};
     options.token = token;
     options.publishStreamInfo = publishStreamInfo;
     options.roomInfo = roomInfo;
-    exec(null, null, PLUGIN_NAME, 'joinRoom', [options]);
+    exec(successCallback, errorCallback, PLUGIN_NAME, 'joinRoom', [options]);
   },
 
   /**
@@ -561,11 +561,24 @@ var EnxCordovaPlugin = {
    * To make outbound call using client number.
    * @param {String} text use mobile number with std code.
    */
-  makeOutboundCall: function (text) {
+   makeOutboundCall: function (number,callid,dialOptions) {
     var options = {};
-    options.text = text;
+    options.number = number;
+    options.callerId = callid;
+    options.dialOptions = dialOptions;
     exec(null, null, PLUGIN_NAME, 'makeOutboundCall', [options]);
-  },
+    },
+
+    /** To cancel Outbound call using phone number
+     * @param {String} text use mobile number with std code
+     */
+    cancelOutboundCall :function(number){
+      var options = {};
+      options.number=number;
+      exec(null,null,PLUGIN_NAME,"cancelOutboundCall",[options])
+
+
+    },
 
   /**
    * To send chat message to the other clients.
@@ -583,13 +596,13 @@ var EnxCordovaPlugin = {
 
   /**
    * To send custom chat message to the other clients.
-   * @param {String} text 
+   * @param {JSON} json 
    * @param {boolean} broadcast 
    * @param {Array} array 
    */
-  sendUserData: function (text, broadcast, array) {
+  sendUserData: function (json, broadcast, array) {
     var options = {};
-    options.text = text;
+    options.message = json;
     options.broadcast = broadcast;
     options.array = array;
     exec(null, null, PLUGIN_NAME, 'sendUserData', [options]);
@@ -757,8 +770,10 @@ var EnxCordovaPlugin = {
   /**
    * To eanble proximity sensor. true for enable and false for disable.
    * @param {boolean} status 
+   * @param {CallableFunction} successCallback 
+   * @param {CallableFunction} errorCallback
    */
-  enableProximitySensor: function (status) {
+  enableProximitySensor: function (status,successCallback, errorCallback) {
     var options = {};
     options.status = status;
     exec(successCallback, errorCallback, PLUGIN_NAME, 'enableProximitySensor', [options]);
@@ -794,16 +809,242 @@ var EnxCordovaPlugin = {
     exec(successCallback, errorCallback, PLUGIN_NAME, 'whoAmI', [options]);
   },
 
+  /**
+   * To start Annotation on given client ID
+   * @param {String} clientid 
+   */
   startAnnotation: function (clientid) {
     var options = {};
     options.clientId = clientid;
     exec(null, null, PLUGIN_NAME, 'startAnnotation', [options]);
   },
 
+  /**
+   * To stop Annotation.
+   */
   stopAnnotations: function () {
     var options = {};
     exec(null, null, PLUGIN_NAME, 'stopAnnotations', [options]);
   },
+
+  /**
+   * To pin user.
+   */
+  pinUsers: function (jsonArray) {
+    var options = {};
+    options.jsonArray = jsonArray;
+    exec(null, null, PLUGIN_NAME, 'pinUsers', [options]);
+  },
+
+
+  /**
+   * To unpin user.
+   */
+  unpinUsers: function (jsonArray) {
+    var options = {};
+    options.jsonArray = jsonArray;
+    exec(null, null, PLUGIN_NAME, 'unpinUsers', [options]);
+  },
+   /**
+   * To capture screen shot.
+   * * @param {String} streamId 
+   */
+    captureScreenShot: function (streamId) {
+      var options = {};
+      options.streamId = streamId;
+      exec(null, null, PLUGIN_NAME, 'captureScreenShot', [options]);
+    },
+  /**
+   * To AddspotLisht user.
+   */
+   addSpotlightUsers: function (clientIds) {
+    var options = {};
+    options.clientIds = clientIds;
+    exec(null, null, PLUGIN_NAME, 'addSpotlightUsers', [options]);
+  },
+
+
+  
+
+  /**
+   * To removespotLisht user.
+   */
+   removeSpotlightUsers: function (clientIds) {
+    var options = {};
+    options.clientIds = clientIds;
+    exec(null, null, PLUGIN_NAME, 'removeSpotlightUsers', [options]);
+  },
+
+   /**
+   * To subscribeForTalkerNotification .
+   *    * @param {boolean} isTalkerNofitication 
+   */
+
+    subscribeForTalkerNotification :function(isTalkerNofitication){
+      var options = {};
+      options.isTalkerNofitication = isTalkerNofitication;
+      exec(null, null, PLUGIN_NAME, 'subscribeForTalkerNotification', [options]);
+    },
+
+
+/**
+   * To Precalltest .
+   *  * @param {JSON} precallJson 
+   */
+
+//   clientDiagnostics :function(precallJson){
+//   var options = {};
+//   options.precallJson = precallJson;
+//   exec(null, null, PLUGIN_NAME, 'clientDiagnostics', [options]);
+// },  
+//inviteToFloor,cancelFloorInvite,rejectInviteFloor,acceptInviteFloorRequest
+  /**
+   * To inviteToFloor
+   * @param {String} clientid 
+   */
+   inviteToFloor: function (clientid) {
+    var options = {};
+    options.clientId = clientid;
+    exec(null, null, PLUGIN_NAME, 'inviteToFloor', [options]);
+  },
+ /**
+   * To cancelFloorInvite
+   * @param {String} clientid 
+   */
+  cancelFloorInvite: function (clientid) {
+    var options = {};
+    options.clientId = clientid;
+    exec(null, null, PLUGIN_NAME, 'cancelFloorInvite', [options]);
+  },
+   /**
+   * To cancelFloorInvite
+   * @param {String} clientid 
+   */
+    rejectInviteFloor: function (clientid) {
+      var options = {};
+      options.clientId = clientid;
+      exec(null, null, PLUGIN_NAME, 'rejectInviteFloor', [options]);
+    },
+
+    /**
+   * To acceptInviteFloorRequest
+   * @param {String} clientid 
+   */
+     acceptInviteFloorRequest: function (clientid) {
+      var options = {};
+      options.clientId = clientid;
+      exec(null, null, PLUGIN_NAME, 'acceptInviteFloorRequest', [options]);
+    },
+
+     /**
+   * To switch room mode
+   * @param {String} roomMode 
+   */
+      switchRoomMode: function (roomMode) {
+        var options = {};
+        options.roomMode = roomMode;
+        exec(null, null, PLUGIN_NAME, 'switchRoomMode', [options]);
+      },
+      
+
+      /**
+       *Override Single Mute/Unmute Audio room level 
+       *@param{String} clientId
+
+       */
+
+       hardMuteUserAudio:function(clientId){
+        var options = {};
+        options.clientId = clientId;
+        exec(null, null, PLUGIN_NAME, 'hardMuteUserAudio', [options]);
+
+       },
+
+        /**
+       *Override Single Unmute Audio room level 
+       *@param{String} clientId
+
+       */
+
+       hardUnmuteUserAudio:function(clientId){
+        var options = {};
+        options.clientId = clientId;
+        exec(null, null, PLUGIN_NAME, 'hardUnmuteUserAudio', [options]);
+
+       },
+       
+    /**
+     * Override Single Mute Video 
+     * @param {String} clientId
+     */
+
+     hardMuteUserVideo:function(clientId){
+      var options = {};
+      options.clientId = clientId;
+      exec(null, null, PLUGIN_NAME, 'hardMuteUserVideo', [options]);
+
+     },
+
+      /**
+     * Override Single unMute Video 
+     * @param {String} clientId
+     */
+
+    
+     hardUnmuteUserVideo:function(clientId){
+      var options = {};
+      options.clientId = clientId;
+      exec(null, null, PLUGIN_NAME, 'hardUnmuteUserVideo', [options]);
+
+     },
+
+
+     /**
+      * Highlight the enxplayer border color 
+      */
+      highlightBorderForClient:function(clientIds){
+        var options = {};
+        options.clientIds = clientIds;
+        exec(null, null, PLUGIN_NAME, 'highlightBorderForClient', [options]);
+  
+      },
+      
+      /**
+       * Change Background color for the EnxPlayerView changeBgColorForClients
+       */
+
+       changeBgColorForClients:function(clientIds,color){
+        var options = {};
+        options.clientIds = clientIds;
+        options.color=color;
+        exec(null, null, PLUGIN_NAME, 'changeBgColorForClients', [options]);
+  
+      },
+
+       /**
+   * To Speech to Text(Livetranscription).
+   * Start LiveTranscriptions
+   */
+  subscribeForLiveTranscription: function (enable) {
+    var options = {};
+    options.enable = enable;
+
+    exec(null, null, PLUGIN_NAME, 'subscribeForLiveTranscription', [options]);
+  },
+  startLiveTranscriptionForRoom: function (language) {
+    var options = {};
+    options.language = language;
+
+    exec(null, null, PLUGIN_NAME, 'startLiveTranscriptionForRoom', [options]);
+  },
+
+   stopLiveTranscription: function () {
+    var options = {};
+    exec(null, null, PLUGIN_NAME, 'stopLiveTranscription', [options]);
+  },
+    
+    
+
   /**
   * Dumy Method.
   * @param nil
