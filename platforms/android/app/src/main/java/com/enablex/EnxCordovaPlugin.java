@@ -2685,6 +2685,8 @@ public void stopLiveTranscription(){
     public void onRoomConnected(EnxRoom enxRoom, JSONObject jsonObject) {
         this.mEnxRoom = enxRoom;
         if (enxRoom != null) {
+             EnxPlayerView enxPlayerView = new EnxPlayerView(cordova.getActivity(), EnxPlayerView.ScalingType.SCALE_ASPECT_BALANCED, true);
+            mLocalStream.attachRenderer(enxPlayerView);
             mEnxRoom.setActiveTalkerViewObserver(this);
             enxRoom.setBandwidthObserver(this);
             enxRoom.setChairControlObserver(this);

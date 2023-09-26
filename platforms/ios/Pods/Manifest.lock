@@ -1,28 +1,3 @@
-PODS:
-  - EnablexWebRTC (1.0.2)
-  - EnxRTCiOS (2.3.10):
-    - EnablexWebRTC (= 1.0.2)
-  - Socket.IO-Client-Swift (15.0.0):
-    - Starscream (~> 3.1)
-  - Starscream (3.1.1)
-
-DEPENDENCIES:
-  - EnxRTCiOS (= 2.3.10)
-  - Socket.IO-Client-Swift (~> 15.0.0)
-
-SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
-    - EnablexWebRTC
-    - EnxRTCiOS
-    - Socket.IO-Client-Swift
-    - Starscream
-
-SPEC CHECKSUMS:
-  EnablexWebRTC: 05f0d79eb6f133f1b844af9a2b7530dc7c6e2108
-  EnxRTCiOS: b0e7c753b54fa9ab091e6ace111fff3e16fdbd81
-  Socket.IO-Client-Swift: c039a808195d22a7192962841b8c035cb61ea49e
-  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
-
-PODFILE CHECKSUM: 32ede92d6212cb95b3f08371bbb2424808f69b0a
+PODFILE CHECKSUM: 77d55e7b9c84bdce6a6616a155aa8048db2d1453
 
 COCOAPODS: 1.12.1
