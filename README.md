@@ -1,4 +1,7 @@
-# Comprehensive Guide to Developing a Cordova Video Calling App with EnableX Integration
+# Getting Started with EnableX Cordova Integration: Step-by-Step Guide and Configuration
+
+This application exemplifies the seamless integration of EnableX in a Cordova environment for 1-to-1 video chats. It serves as a hands-on guide, offering detailed insights into the setup, configuration, and core functionalities. Moreover, it assists developers in grasping the nuances of real-time video communication within a Cordova framework.
+
 ## 1. How to get started
 
 ### 1.1 Prerequisites
