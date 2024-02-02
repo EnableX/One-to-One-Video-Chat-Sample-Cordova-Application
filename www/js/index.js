@@ -100,7 +100,7 @@ $("#joinButton").click(function () {
 
          document.getElementById("div_videoButton").style.display= "block";
         
-          initLocalView();
+          
           initRemoteView();
           initEventListner();
         }, function (err) {
@@ -583,6 +583,7 @@ function setRoomID(room_id){
 
     function initEventListner(){
       window.EnxRtc.addEventListner("onRoomConnected", function (data) {
+        initLocalView();
         console.log('Excelsior succuss! resizeViewOptions ' + JSON.stringify(data.data));
 
       });
