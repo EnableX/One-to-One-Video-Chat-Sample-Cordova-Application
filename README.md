@@ -8,7 +8,7 @@ This application exemplifies the seamless integration of EnableX in a Cordova en
 
 #### 1.1.1 App Id and App Key 
 
-* Register with EnableX [https://developer.enablex.io/] 
+* Register with EnableX [https://www.enablex.io/free-trial/] 
 * Create your Application
 * Get your App ID and App Key delivered to your email
 
